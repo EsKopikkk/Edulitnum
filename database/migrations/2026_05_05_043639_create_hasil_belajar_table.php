@@ -15,7 +15,7 @@ return new class extends Migration
         $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
         // Foreign Key ke tabel soal
-        $table->foreignId('soal_id')->constrained('soals')->onDelete('cascade');
+        $table->foreignId('soal_id')->constrained('soal')->onDelete('cascade');
 
         // Boolean: 1 jika benar, 0 jika salah
         $table->boolean('is_benar');
