@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,4 +18,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Rute Khusus Admin
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/akun', [UserController::class, 'index'])->name('admin.akun.index');
+    Route::post('/admin/akun', [UserController::class, 'store'])->name('admin.akun.store');
+    Route::delete('/admin/akun/{id}', [UserController::class, 'destroy'])->name('admin.akun.destroy');
+});
 require __DIR__.'/auth.php';
