@@ -21,17 +21,17 @@ class SoalController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pertanyaan' => 'required|string',
-            'kategori' => 'required|in:literasi,numerasi',
-            'fase' => 'required|in:A,B,C',
+            'pertanyaan'    => 'required|string',
+            'kategori'      => 'required|in:literasi,numerasi',
+            'fase'          => 'required|in:A,B,C',
+            'pilihan_a'     => 'required|string',
+            'pilihan_b'     => 'required|string',
+            'pilihan_c'     => 'required|string',
+            'pilihan_d'     => 'required|string',
+            'kunci_jawaban' => 'required|in:A,B,C,D',
         ]);
 
-        Soal::create([
-            'pertanyaan' => $request->pertanyaan,
-            'kategori' => $request->kategori,
-            'fase' => $request->fase,
-            'status_validasi' => false,
-        ]);
+        Soal::create($request->all());
 
         return redirect()->route('soal.index')->with('success', 'Soal berhasil ditambahkan!');
     }
@@ -44,14 +44,19 @@ class SoalController extends Controller
     public function update(Request $request, Soal $soal)
     {
         $request->validate([
-            'pertanyaan' => 'required|string',
-            'kategori' => 'required|in:literasi,numerasi',
-            'fase' => 'required|in:A,B,C',
+            'pertanyaan'    => 'required|string',
+            'kategori'      => 'required|in:literasi,numerasi',
+            'fase'          => 'required|in:A,B,C',
+            'pilihan_a'     => 'required|string',
+            'pilihan_b'     => 'required|string',
+            'pilihan_c'     => 'required|string',
+            'pilihan_d'     => 'required|string',
+            'kunci_jawaban' => 'required|in:A,B,C,D',
         ]);
 
         $soal->update($request->all());
 
-        return redirect()->route('soal.index')->with('success', 'Soal berhasil diupdate!');
+        return redirect()->route('soal.index')->with('success', 'Soal berhasil diperbarui!');
     }
 
     public function destroy(Soal $soal)

@@ -12,6 +12,11 @@ class Soal extends Model
         'pertanyaan',
         'kategori',
         'fase',
+        'pilihan_a',
+        'pilihan_b',
+        'pilihan_c',
+        'pilihan_d',
+        'kunci_jawaban',
         'status_validasi',
     ];
-}
+}   
