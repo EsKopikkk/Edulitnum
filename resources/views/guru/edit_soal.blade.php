@@ -13,32 +13,42 @@
                     @method('PUT')
                     <div class="mb-4">
                         <label class="block font-semibold mb-1" style="color: #E87F24;">Pertanyaan</label>
-                        <textarea name="pertanyaan" rows="4"
-                                  class="w-full border rounded p-2"
-                                  style="border-color: #FFC81E;" required>{{ $soal->pertanyaan }}</textarea>
+                        <textarea name="pertanyaan" rows="4" class="w-full border rounded p-2" style="border-color: #FFC81E;" required>{{ $soal->pertanyaan }}</textarea>
                     </div>
-                    <div class="mb-4">
-                        <label class="block font-semibold mb-1" style="color: #E87F24;">Kategori</label>
-                        <select name="kategori" class="w-full border rounded p-2" style="border-color: #FFC81E;" required>
-                            <option value="literasi" {{ $soal->kategori == 'literasi' ? 'selected' : '' }}>Literasi</option>
-                            <option value="numerasi" {{ $soal->kategori == 'numerasi' ? 'selected' : '' }}>Numerasi</option>
-                        </select>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block font-semibold mb-1" style="color: #E87F24;">Kategori</label>
+                            <select name="kategori" class="w-full border rounded p-2" style="border-color: #FFC81E;" required>
+                                <option value="literasi" {{ $soal->kategori == 'literasi' ? 'selected' : '' }}>Literasi</option>
+                                <option value="numerasi" {{ $soal->kategori == 'numerasi' ? 'selected' : '' }}>Numerasi</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1" style="color: #E87F24;">Fase</label>
+                            <select name="fase" class="w-full border rounded p-2" style="border-color: #FFC81E;" required>
+                                @foreach(['A','B','C'] as $f)
+                                <option value="{{ $f }}" {{ $soal->fase == $f ? 'selected' : '' }}>Fase {{ $f }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-4">
-                        <label class="block font-semibold mb-1" style="color: #E87F24;">Fase</label>
-                        <select name="fase" class="w-full border rounded p-2" style="border-color: #FFC81E;" required>
-                            @foreach(['A','B','C'] as $fase)
-                            <option value="{{ $fase }}" {{ $soal->fase == $fase ? 'selected' : '' }}>Fase {{ $fase }}</option>
-                            @endforeach
-                        </select>
+                    
+                    <div class="mb-6">
+                        <label class="block font-semibold mb-2" style="color: #E87F24;">Pilihan Jawaban</label>
+                        @foreach(['A','B','C','D'] as $p)
+                        @php $field = 'pilihan_'.strtolower($p); @endphp
+                        <div class="flex items-center mb-2 gap-2">
+                            <input type="radio" name="kunci_jawaban" value="{{ $p }}" {{ $soal->kunci_jawaban == $p ? 'checked' : '' }} required>
+                            <span class="font-bold w-6">{{ $p }}.</span>
+                            <input type="text" name="{{ $field }}" value="{{ $soal->$field }}" class="flex-1 border rounded p-2" style="border-color: #FFC81E;" required>
+                        </div>
+                        @endforeach
                     </div>
-                    <button type="submit"
-                            class="px-6 py-2 rounded text-white font-semibold"
-                            style="background-color: #E87F24;">
+
+                    <button type="submit" class="px-6 py-2 rounded text-white font-semibold" style="background-color: #E87F24;">
                         Update Soal
                     </button>
-                    <a href="{{ route('soal.index') }}"
-                       class="ml-2 px-6 py-2 rounded text-white font-semibold bg-gray-400">
+                    <a href="{{ route('soal.index') }}" class="ml-2 px-6 py-2 rounded text-white font-semibold bg-gray-400">
                         Batal
                     </a>
                 </form>
