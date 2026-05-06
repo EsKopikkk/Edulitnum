@@ -20,7 +20,9 @@ class SoalController extends Controller
 
     public function store(Request $request)
     {
+        // Tambahkan validasi untuk pilihan jawaban dan kunci
         $request->validate([
+<<<<<<< HEAD
             'pertanyaan'    => 'required|string',
             'kategori'      => 'required|in:literasi,numerasi',
             'fase'          => 'required|in:A,B,C',
@@ -32,6 +34,29 @@ class SoalController extends Controller
         ]);
 
         Soal::create($request->all());
+=======
+            'pertanyaan' => 'required|string',
+            'kategori' => 'required|in:literasi,numerasi',
+            'fase' => 'required|in:A,B,C',
+            'pilihan_a' => 'required|string',
+            'pilihan_b' => 'required|string',
+            'pilihan_c' => 'required|string',
+            'pilihan_d' => 'required|string',
+            'kunci_jawaban' => 'required|in:A,B,C,D',
+        ]);
+
+        Soal::create([
+            'pertanyaan' => $request->pertanyaan,
+            'kategori' => $request->kategori,
+            'fase' => $request->fase,
+            'pilihan_a' => $request->pilihan_a,
+            'pilihan_b' => $request->pilihan_b,
+            'pilihan_c' => $request->pilihan_c,
+            'pilihan_d' => $request->pilihan_d,
+            'kunci_jawaban' => $request->kunci_jawaban,
+            'status_validasi' => false,
+        ]);
+>>>>>>> 86f2f80edaa9edc8f9758519d26e375976d25d3c
 
         return redirect()->route('soal.index')->with('success', 'Soal berhasil ditambahkan!');
     }
@@ -44,6 +69,7 @@ class SoalController extends Controller
     public function update(Request $request, Soal $soal)
     {
         $request->validate([
+<<<<<<< HEAD
             'pertanyaan'    => 'required|string',
             'kategori'      => 'required|in:literasi,numerasi',
             'fase'          => 'required|in:A,B,C',
@@ -51,6 +77,15 @@ class SoalController extends Controller
             'pilihan_b'     => 'required|string',
             'pilihan_c'     => 'required|string',
             'pilihan_d'     => 'required|string',
+=======
+            'pertanyaan' => 'required|string',
+            'kategori' => 'required|in:literasi,numerasi',
+            'fase' => 'required|in:A,B,C',
+            'pilihan_a' => 'required|string',
+            'pilihan_b' => 'required|string',
+            'pilihan_c' => 'required|string',
+            'pilihan_d' => 'required|string',
+>>>>>>> 86f2f80edaa9edc8f9758519d26e375976d25d3c
             'kunci_jawaban' => 'required|in:A,B,C,D',
         ]);
 

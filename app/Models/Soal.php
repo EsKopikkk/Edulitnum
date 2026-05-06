@@ -8,6 +8,7 @@ class Soal extends Model
 {
     protected $table = 'soal';
 
+    // Pastikan semua kolom ini terdaftar agar bisa disimpan ke database
     protected $fillable = [
         'pertanyaan',
         'kategori',
