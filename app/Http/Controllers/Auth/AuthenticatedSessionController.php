@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * MENAMPILKAN HALAMAN LOGIN (Method yang Error tadi)
      */
     public function create(): View
     {
@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * MEMPROSES LOGIN & REDIRECT BERDASARKAN ROLE
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -28,11 +28,24 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = Auth::user();
+
+        // Memastikan pengecekan role tidak peka huruf besar/kecil
+        $role = strtolower($user->role);
+
+        if ($role === 'admin') {
+            return redirect()->intended(route('admin.dashboard'));
+        } elseif ($role === 'guru') {
+            return redirect()->intended(route('guru.dashboard'));
+        } elseif ($role === 'siswa') {
+            return redirect()->intended(route('siswa.dashboard'));
+        }
+
+        return redirect()->intended('/');
     }
 
     /**
-     * Destroy an authenticated session.
+     * LOGOUT
      */
     public function destroy(Request $request): RedirectResponse
     {
