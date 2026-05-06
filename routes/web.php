@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\SoalController;
 
 Route::get('/', function () {
-    return view('dashboard');
+    return view('welcome_edulitnum');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
