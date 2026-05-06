@@ -8,7 +8,7 @@ use App\Http\Controllers\KelasController; // Dipindah ke atas agar rapi
 
 // 1. Halaman Muka (Landing Page) - Bebas diakses tanpa login
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome_edulitnum');
 });
 
 // 2. Halaman Dashboard - Wajib Login Dulu
