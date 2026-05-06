@@ -20,4 +20,4 @@ class Soal extends Model
         'kunci_jawaban',
         'status_validasi',
     ];
-}
+}   
