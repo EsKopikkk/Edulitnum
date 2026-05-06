@@ -43,5 +43,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('soal', SoalController::class);
 });
 
+// Tambahkan rute ini untuk Leaderboard
+Route::get('/guru/leaderboard', [SoalController::class, 'leaderboard'])->name('guru.leaderboard');
+
 // Otentikasi Bawaan Breeze (Login, Register, Logout)
 require __DIR__.'/auth.php';
