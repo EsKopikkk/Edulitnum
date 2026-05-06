@@ -20,16 +20,27 @@ class SoalController extends Controller
 
     public function store(Request $request)
     {
+        // Tambahkan validasi untuk pilihan jawaban dan kunci
         $request->validate([
             'pertanyaan' => 'required|string',
             'kategori' => 'required|in:literasi,numerasi',
             'fase' => 'required|in:A,B,C',
+            'pilihan_a' => 'required|string',
+            'pilihan_b' => 'required|string',
+            'pilihan_c' => 'required|string',
+            'pilihan_d' => 'required|string',
+            'kunci_jawaban' => 'required|in:A,B,C,D',
         ]);
 
         Soal::create([
             'pertanyaan' => $request->pertanyaan,
             'kategori' => $request->kategori,
             'fase' => $request->fase,
+            'pilihan_a' => $request->pilihan_a,
+            'pilihan_b' => $request->pilihan_b,
+            'pilihan_c' => $request->pilihan_c,
+            'pilihan_d' => $request->pilihan_d,
+            'kunci_jawaban' => $request->kunci_jawaban,
             'status_validasi' => false,
         ]);
 
@@ -47,6 +58,11 @@ class SoalController extends Controller
             'pertanyaan' => 'required|string',
             'kategori' => 'required|in:literasi,numerasi',
             'fase' => 'required|in:A,B,C',
+            'pilihan_a' => 'required|string',
+            'pilihan_b' => 'required|string',
+            'pilihan_c' => 'required|string',
+            'pilihan_d' => 'required|string',
+            'kunci_jawaban' => 'required|in:A,B,C,D',
         ]);
 
         $soal->update($request->all());
