@@ -3,176 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nilai Siswa | Edulitnum</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'edu-orange': '#E87F24',
-                        'edu-dark-orange': '#C66A1B',
-                        'edu-blue': '#73A5CA',
-                        'edu-bg': '#FEFDDF',
-                        'edu-dark': '#1A202C',
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #FEFDDF; overflow-x: hidden; }
-        h1, h2, h3 { font-family: 'Montserrat', sans-serif; }
-
-        .sidebar-active {
-            background: #E87F24;
-            box-shadow: 0 10px 20px rgba(232, 127, 36, 0.3);
-            transform: scale(1.05);
-        }
-
-        .blob {
-            position: fixed;
-            width: 400px;
-            height: 400px;
-            background: #E87F24;
-            filter: blur(100px);
-            opacity: 0.1;
-            z-index: -1;
-            border-radius: 50%;
-        }
-    </style>
+    <title>Papan Peringkat Siswa - EduLitNum</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen flex p-4 md:p-6 gap-6">
-
-    <div class="blob -top-20 -left-20"></div>
-    <div class="blob -bottom-20 -right-20" style="background: #73A5CA;"></div>
-
-    <aside class="w-72 bg-white/80 backdrop-blur-xl rounded-[3rem] shadow-2xl shadow-edu-orange/10 p-8 flex flex-col border border-white shrink-0">
-        <div class="flex items-center gap-4 mb-12">
-            <div class="w-12 h-12 bg-edu-orange rounded-2xl flex items-center justify-center shadow-lg animate-bounce duration-[3s]">
-                <span class="text-white font-black text-2xl">E</span>
-            </div>
-            <div>
-                <span class="text-edu-dark font-black text-xl tracking-tighter block">GURU</span>
-                <span class="text-edu-orange font-bold text-xs uppercase tracking-widest">Portal Panel</span>
+<body class="bg-slate-100 p-4 md:p-8 antialiased font-sans">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header Section -->
+        <div class="bg-gradient-to-r from-blue-700 to-blue-500 rounded-t-2xl p-8 text-white shadow-lg relative overflow-hidden">
+            <!-- Hiasan Background -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+            
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-3xl font-extrabold tracking-tight">🏆 Papan Peringkat Siswa</h2>
+                    <p class="text-blue-100 mt-2 text-lg">Pantau progres dan skor tertinggi siswa kelas Anda.</p>
+                </div>
+                <a href="/dashboard" class="px-5 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl backdrop-blur-md font-semibold transition border border-white/30 shadow-sm flex items-center gap-2">
+                    <span>⬅️</span> Kembali
+                </a>
             </div>
         </div>
 
-        <nav class="flex-1 space-y-3">
-            <a href="/guru/dashboard" class="flex items-center gap-4 px-5 py-4 text-gray-400 hover:text-edu-orange hover:bg-edu-orange/5 rounded-2xl font-bold transition-all group">
-                <svg class="w-6 h-6 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                Dashboard
-            </a>
-            <a href="{{ route('soal.index') }}" class="flex items-center gap-4 px-5 py-4 text-gray-400 hover:text-edu-orange hover:bg-edu-orange/5 rounded-2xl font-bold transition-all group">
-                <svg class="w-6 h-6 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                Materi Saya
-            </a>
-            <a href="{{ route('guru.leaderboard') }}" class="flex items-center gap-4 px-5 py-4 sidebar-active text-white rounded-2xl font-bold transition-all group">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                Nilai Siswa
-            </a>
-        </nav>
-
-        <form method="POST" action="{{ route('logout') }}" class="mt-auto">
-            @csrf
-            <button class="w-full flex items-center gap-4 px-5 py-4 text-red-400 hover:bg-red-50 rounded-2xl font-bold transition-all">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                Log Out
-            </button>
-        </form>
-    </aside>
-
-    <main class="flex-1 flex flex-col gap-6 w-full overflow-hidden">
-
-        <header class="w-full bg-white/60 backdrop-blur-md rounded-[2.5rem] p-6 flex justify-between items-center border border-white">
-            <div class="px-4">
-                <h1 class="text-2xl font-black text-edu-dark">Leaderboard Siswa 🏆</h1>
-                <p class="text-sm text-gray-400 font-medium">Pantau nilai dan performa belajar murid-muridmu di sini.</p>
-            </div>
-            <div class="flex items-center gap-4 bg-edu-orange p-2 pr-6 rounded-3xl shadow-lg shadow-edu-orange/20">
-                <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center font-black text-edu-orange">
-                    {{ substr(Auth::user()->name, 0, 1) }}
-                </div>
-                <span class="text-white font-bold text-sm tracking-tight">Guru Aktif</span>
-            </div>
-        </header>
-
-        <div class="flex-1 bg-white rounded-[3rem] p-8 border border-white shadow-xl shadow-black/5 flex flex-col overflow-hidden">
-            
-            <div class="flex justify-between items-center mb-8">
-                <h3 class="font-black text-xl text-edu-dark">Top Performa Kelas</h3>
-                <div class="flex gap-2">
-                    <select class="bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-2 text-sm font-bold text-gray-500 outline-none focus:border-edu-orange">
-                        <option>Semua Fase</option>
-                        <option>Fase A</option>
-                        <option>Fase B</option>
-                        <option>Fase C</option>
-                    </select>
-                </div>
+        <!-- Table Section -->
+        <div class="bg-white rounded-b-2xl shadow-xl overflow-hidden border border-slate-200">
+            <!-- Filter / Tab (Hanya Slicing UI) -->
+            <div class="p-4 border-b border-slate-100 flex gap-2">
+                <button class="px-4 py-2 bg-blue-50 text-blue-700 font-bold rounded-lg border border-blue-200 text-sm">Semua Fase</button>
+                <button class="px-4 py-2 bg-white text-slate-600 font-medium rounded-lg border border-slate-200 hover:bg-slate-50 text-sm transition">Fase A</button>
+                <button class="px-4 py-2 bg-white text-slate-600 font-medium rounded-lg border border-slate-200 hover:bg-slate-50 text-sm transition">Fase B</button>
             </div>
 
-            <div class="flex-1 overflow-auto rounded-2xl border-2 border-gray-50">
-                <table class="w-full text-left border-collapse min-w-max">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-50 border-b-2 border-gray-100">
-                            <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center w-20">Rank</th>
-                            <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest">Nama Siswa</th>
-                            <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Fase</th>
-                            <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Waktu Submit</th>
-                            <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Skor Akhir</th>
+                        <tr class="bg-slate-50 text-slate-500 uppercase text-xs font-extrabold tracking-wider border-b border-slate-200">
+                            <th class="py-4 px-6 text-center w-24">Peringkat</th>
+                            <th class="py-4 px-6">Nama Siswa</th>
+                            <th class="py-4 px-6 text-center">Fase / Kelas</th>
+                            <th class="py-4 px-6 text-center">Soal Selesai</th>
+                            <th class="py-4 px-6 text-right">Total Skor</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @forelse($rankings as $index => $r)
-                        <tr class="border-b border-gray-50 hover:bg-orange-50/30 transition-colors group">
-                            <td class="p-4 text-center font-bold">
-                                @if($index == 0) 
-                                    <span class="text-2xl" title="Juara 1">🥇</span> 
-                                @elseif($index == 1) 
-                                    <span class="text-2xl" title="Juara 2">🥈</span> 
-                                @elseif($index == 2) 
-                                    <span class="text-2xl" title="Juara 3">🥉</span> 
-                                @else 
-                                    <div class="w-8 h-8 mx-auto rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-black">
-                                        {{ $index + 1 }}
-                                    </div>
-                                @endif
+                    <tbody class="text-slate-700 text-sm">
+                        <!-- Data Dummy 1 (Juara 1) -->
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition group">
+                            <td class="py-4 px-6 text-center">
+                                <span class="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br from-yellow-300 to-yellow-500 text-white font-black rounded-full shadow-sm group-hover:scale-110 transition transform">1</span>
                             </td>
-                            <td class="p-4 text-sm font-bold text-edu-dark">
-                                {{ $r['nama'] }}
+                            <td class="py-4 px-6">
+                                <div class="font-bold text-slate-900 text-base">Fatimah Az Zahra</div>
+                                <div class="text-xs text-slate-500">ID: SIS-001</div>
                             </td>
-                            <td class="p-4 text-center">
-                                <span class="px-3 py-1 rounded-lg text-xs font-bold bg-gray-100 text-gray-500">
-                                    Fase {{ $r['fase'] }}
-                                </span>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-blue-100 text-blue-700 py-1 px-3 rounded-full font-semibold text-xs">Fase A - Kelas 1</span>
                             </td>
-                            <td class="p-4 text-center text-sm font-medium text-gray-400">
-                                {{ $r['waktu'] }} WIB
-                            </td>
-                            <td class="p-4 text-center">
-                                <div class="inline-block px-4 py-2 rounded-xl bg-gradient-to-r from-edu-orange to-edu-dark-orange text-white font-black shadow-md shadow-edu-orange/30">
-                                    {{ $r['skor'] }}
-                                </div>
-                            </td>
+                            <td class="py-4 px-6 text-center font-medium">45/50</td>
+                            <td class="py-4 px-6 text-right font-black text-blue-600 text-lg">9,850</td>
                         </tr>
-                        @empty
-                        <tr>
-                            <td colspan="5" class="p-12 text-center text-gray-400">
-                                <p class="font-medium">Belum ada data nilai tersedia saat ini.</p>
+
+                        <!-- Data Dummy 2 (Juara 2) -->
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition group">
+                            <td class="py-4 px-6 text-center">
+                                <span class="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br from-slate-300 to-slate-400 text-white font-black rounded-full shadow-sm group-hover:scale-110 transition transform">2</span>
                             </td>
+                            <td class="py-4 px-6">
+                                <div class="font-bold text-slate-900 text-base">Bima Arya</div>
+                                <div class="text-xs text-slate-500">ID: SIS-042</div>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-blue-100 text-blue-700 py-1 px-3 rounded-full font-semibold text-xs">Fase A - Kelas 2</span>
+                            </td>
+                            <td class="py-4 px-6 text-center font-medium">42/50</td>
+                            <td class="py-4 px-6 text-right font-black text-blue-600 text-lg">8,920</td>
                         </tr>
-                        @endforelse
+
+                        <!-- Data Dummy 3 (Juara 3) -->
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition group">
+                            <td class="py-4 px-6 text-center">
+                                <span class="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br from-amber-600 to-amber-700 text-white font-black rounded-full shadow-sm group-hover:scale-110 transition transform">3</span>
+                            </td>
+                            <td class="py-4 px-6">
+                                <div class="font-bold text-slate-900 text-base">Cahaya Mentari</div>
+                                <div class="text-xs text-slate-500">ID: SIS-018</div>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-blue-100 text-blue-700 py-1 px-3 rounded-full font-semibold text-xs">Fase A - Kelas 1</span>
+                            </td>
+                            <td class="py-4 px-6 text-center font-medium">40/50</td>
+                            <td class="py-4 px-6 text-right font-black text-blue-600 text-lg">8,500</td>
+                        </tr>
+
+                        <!-- Data Dummy 4 (Biasa) -->
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
+                            <td class="py-4 px-6 text-center font-bold text-slate-400">4</td>
+                            <td class="py-4 px-6">
+                                <div class="font-semibold text-slate-800 text-base">Dicky Saputra</div>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-blue-100 text-blue-700 py-1 px-3 rounded-full font-semibold text-xs">Fase B - Kelas 3</span>
+                            </td>
+                            <td class="py-4 px-6 text-center font-medium">35/50</td>
+                            <td class="py-4 px-6 text-right font-bold text-slate-600 text-lg">7,100</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
             
+            <!-- Pagination UI Dummy -->
+            <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center text-sm text-slate-500">
+                <span>Menampilkan 1 hingga 4 dari 40 siswa</span>
+                <div class="flex gap-1">
+                    <button class="px-3 py-1 bg-white border border-slate-200 rounded text-slate-400 cursor-not-allowed">Sebelumnya</button>
+                    <button class="px-3 py-1 bg-blue-600 text-white rounded font-medium shadow-sm">1</button>
+                    <button class="px-3 py-1 bg-white border border-slate-200 rounded hover:bg-slate-100">2</button>
+                    <button class="px-3 py-1 bg-white border border-slate-200 rounded hover:bg-slate-100">Selanjutnya</button>
+                </div>
+            </div>
         </div>
-
-    </main>
-
+    </div>
 </body>
 </html>
