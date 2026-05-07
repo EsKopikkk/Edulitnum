@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 
 // ==========================================
 // 1. RUTE PUBLIK (Bebas Akses Tanpa Login)
+//tes bracnch
 // ==========================================
 Route::get('/', function () {
     // Sesuaikan 'landing' dengan nama file buatan temanmu (misal: landing.blade.php)
