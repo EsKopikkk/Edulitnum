@@ -23,7 +23,6 @@ class SoalController extends Controller
     // Menyimpan Soal Baru ke Database
     public function store(Request $request)
     {
-        // SUDAH DIPERBAIKI: Menggunakan opsi_a, opsi_b, dst sesuai database
         $request->validate([
             'pertanyaan' => 'required',
             'kategori' => 'required',
@@ -32,7 +31,7 @@ class SoalController extends Controller
             'opsi_b' => 'required',
             'opsi_c' => 'required',
             'opsi_d' => 'required',
-            'kunci_jawaban' => 'required',
+            'jawaban_benar' => 'required', // <--- UBAH BAGIAN INI
         ]);
 
         Soal::create($request->all());

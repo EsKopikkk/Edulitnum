@@ -141,19 +141,19 @@
                         <span class="text-xs text-edu-orange font-bold bg-orange-50 px-2 py-1 rounded-md">*Pilih bulatan untuk kunci jawaban</span>
                     </div>
                     
-                    <div class="space-y-4">
-                        @foreach(['A','B','C','D'] as $p)
-                        <div class="flex items-center gap-4 bg-gray-50 p-2 pr-4 rounded-2xl border-2 border-gray-100 hover:border-edu-orange/30 transition-colors group">
-                            <div class="pl-4">
-                                <input type="radio" name="kunci_jawaban" value="{{ $p }}" class="w-5 h-5 text-edu-orange focus:ring-edu-orange border-gray-300 cursor-pointer" required>
-                            </div>
-                            <div class="w-8 h-8 rounded-xl bg-white flex items-center justify-center font-black text-gray-400 group-hover:text-edu-orange shadow-sm">
-                                {{ $p }}
-                            </div>
-                            <input type="text" name="opsi_{{ strtolower($p) }}" class="flex-1 bg-transparent border-none p-2 text-edu-dark font-medium focus:ring-0" placeholder="Ketik pilihan jawaban {{ $p }}..." required>
-                        </div>
-                        @endforeach
-                    </div>
+                   <div class="space-y-4">
+    @foreach(['A','B','C','D'] as $p)
+    <div class="flex items-center gap-4 bg-gray-50 p-2 pr-4 rounded-2xl border-2 border-gray-100 hover:border-edu-orange/30 transition-colors group">
+        <div class="pl-4">
+            <input type="radio" name="jawaban_benar" value="{{ $p }}" class="w-5 h-5 text-edu-orange focus:ring-edu-orange border-gray-300 cursor-pointer" required>
+        </div>
+        <div class="w-8 h-8 rounded-xl bg-white flex items-center justify-center font-black text-gray-400 group-hover:text-edu-orange shadow-sm">
+            {{ $p }}
+        </div>
+        <input type="text" name="opsi_{{ strtolower($p) }}" class="flex-1 bg-transparent border-none p-2 text-edu-dark font-medium focus:ring-0" placeholder="Ketik pilihan jawaban {{ $p }}..." required>
+    </div>
+    @endforeach
+</div>
                 </div>
 
                 <div class="flex gap-4 pt-6 border-t border-gray-100">
