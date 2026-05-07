@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // Fungsi untuk menampilkan halaman kelola akun beserta datanya
+    // Fungsi untuk mean halaman kelola akun beserta datanya
     public function index()
     {
         // Ambil semua data user kecuali yang role-nya admin (agar admin tidak menghapus dirinya sendiri)

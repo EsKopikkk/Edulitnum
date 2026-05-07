@@ -8,11 +8,24 @@ use Illuminate\Http\Request;
 
 class KelasController extends Controller
 {
-    public function index()
-    {
-        $kelas = Kelas::with('guru')->get();
-        return view('admin.kelola_kelas', compact('kelas'));
-    }
+
+public function index()
+{
+    // Mengambil data kelas, guru, dan menghitung jumlah siswa secara otomatis
+    $kelas = Kelas::with('guru')->withCount('siswa')->get();
+    return view('admin.kelola_kelas', compact('kelas'));
+}
+
+public function manageModul($id)
+{
+    // Mengambil data kelas tertentu
+    $kelas = Kelas::findOrFail($id);
+    
+    // Mengambil soal dari tabel soal yang fasenya sama dengan fase kelas tersebut [cite: 86-90]
+    $moduls = \App\Models\Soal::where('fase', $kelas->fase)->get();
+
+    return view('admin.kelola_modul', compact('kelas', 'moduls'));
+}
 
     public function create()
     {
@@ -52,6 +65,13 @@ class KelasController extends Controller
         return redirect()->route('kelas.index')->with('success', 'Kelas berhasil diupdate!');
     }
 
+    public function show(Kelas $kelas)
+{
+    // Memuat data siswa yang ada di kelas tersebut melalui relasi siswa_detail [cite: 17-20, 82-85]
+    $kelas->load(['guru', 'siswa.user']); 
+    
+    return view('admin.detail_kelas', compact('kelas'));
+}
     public function destroy(Kelas $kelas)
     {
         $kelas->delete();
