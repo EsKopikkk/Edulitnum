@@ -95,7 +95,7 @@
             </div>
             <div class="flex items-center gap-4 bg-edu-orange p-2 pr-6 rounded-3xl shadow-lg shadow-edu-orange/20">
                 <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center font-black text-edu-orange">
-                    {{ substr(Auth::user()->name, 0, 1) }}
+                    {{ substr(Auth::user()->name ?? 'G', 0, 1) }}
                 </div>
                 <span class="text-white font-bold text-sm tracking-tight">Guru Aktif</span>
             </div>
