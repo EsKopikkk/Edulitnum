@@ -103,7 +103,7 @@
             </div>
 
             <div class="pt-10">
-                <a href="{{ route('login') }}" class="btn-glow inline-flex items-center gap-4 px-12 py-6 bg-edu-orange text-white text-xl font-bold rounded-full shadow-2xl group">
+                <a href="/guru/dashboard" class="btn-glow inline-flex items-center gap-4 px-12 py-6 bg-edu-orange text-white text-xl font-bold rounded-full shadow-2xl group">
                     Get Started
                     <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center group-hover:translate-x-2 transition-transform">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
