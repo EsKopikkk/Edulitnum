@@ -46,5 +46,8 @@ Route::middleware(['auth'])->group(function () {
 // Tambahkan rute ini untuk Leaderboard
 Route::get('/guru/leaderboard', [SoalController::class, 'leaderboard'])->name('guru.leaderboard');
 
-// Otentikasi Bawaan Breeze (Login, Register, Logout)
+Route::get('/admin/kelas/{id}/modul', [KelasController::class, 'manageModul'])->name('admin.kelas.modul');
+
+// Route untuk melihat detail siswa dan guru di dalam kelas
+Route::get('/admin/kelas/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
 require __DIR__.'/auth.php';

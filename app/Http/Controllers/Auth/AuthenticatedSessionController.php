@@ -33,13 +33,13 @@ class AuthenticatedSessionController extends Controller
         // Memastikan pengecekan role tidak peka huruf besar/kecil
         $role = strtolower($user->role);
 
-        if ($role === 'admin') {
-            return redirect()->intended(route('admin.dashboard'));
-        } elseif ($role === 'guru') {
-            return redirect()->intended(route('guru.dashboard'));
-        } elseif ($role === 'siswa') {
-            return redirect()->intended(route('siswa.dashboard'));
-        }
+if ($role === 'admin') {
+    return redirect(route('admin.dashboard'));
+} elseif ($role === 'guru') {
+    return redirect(route('guru.dashboard'));
+} elseif ($role === 'siswa') {
+    return redirect(route('siswa.dashboard'));
+}
 
         return redirect()->intended('/');
     }

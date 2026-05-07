@@ -1,38 +1,36 @@
-<nav x-data="{ open: false }" class="border-b" style="background-color: #E87F24;">
-    <!-- Primary Navigation Menu -->
+<nav x-data="{ open: false }" class="border-b border-white/20" style="background-color: #E87F24;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="flex justify-between h-20">
             <div class="flex">
-                <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <!-- Ganti route('dashboard') jadi url('/') -->
-                    <a href="{{ url('/') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-white" />
+                    <a href="{{ url('/') }}" class="flex items-center gap-3 group">
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform">
+                            <span class="text-[#E87F24] font-black text-xl" style="font-family: 'Montserrat', sans-serif;">E</span>
+                        </div>
+                        <span class="text-white font-black text-xl tracking-tighter" style="font-family: 'Montserrat', sans-serif;">EDULITNUM</span>
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <!-- Ganti route('dashboard') jadi url('/') -->
-                    <x-nav-link :href="url('/')" :active="request()->is('/')">
-                        <span class="text-white">{{ __('Beranda') }}</span>
+                <div class="hidden space-x-4 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="url('/')" :active="request()->is('/')" class="text-white border-white">
+                        <span class="text-white font-bold">{{ __('Beranda') }}</span>
                     </x-nav-link>
-@if(Auth::user()->role === 'admin')
-    <x-nav-link :href="route('admin.akun.index')" :active="request()->routeIs('admin.akun.*')">
-        <span class="text-white">{{ __('Kelola Akun') }}</span>
-    </x-nav-link>
-    <x-nav-link :href="route('kelas.index')" :active="request()->routeIs('kelas.*')">
-        <span class="text-white">{{ __('Kelola Kelas') }}</span>
-    </x-nav-link>
-@endif
+
+                    @if(Auth::user()->role === 'admin')
+                        <x-nav-link :href="route('admin.akun.index')" :active="request()->routeIs('admin.akun.*')">
+                            <span class="text-white font-bold opacity-80 hover:opacity-100">{{ __('Kelola Akun') }}</span>
+                        </x-nav-link>
+                        <x-nav-link :href="route('kelas.index')" :active="request()->routeIs('kelas.*')">
+                            <span class="text-white font-bold opacity-80 hover:opacity-100">{{ __('Kelola Kelas') }}</span>
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-transparent hover:text-yellow-200 focus:outline-none transition ease-in-out duration-150">
+                        <button class="inline-flex items-center px-4 py-2 border-2 border-white/20 text-sm font-black rounded-xl text-white bg-white/10 hover:bg-white/20 transition duration-150 ease-in-out">
                             <div>{{ Auth::user()->name }}</div>
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -43,63 +41,24 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
+                        <x-dropdown-link :href="route('profile.edit')">{{ __('Profile') }}</x-dropdown-link>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                            <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
                 </x-dropdown>
             </div>
-
-            <!-- Hamburger -->
+            
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-yellow-200 hover:bg-orange-600 focus:outline-none transition duration-150 ease-in-out">
+                <button @click="open = ! open" class="p-2 rounded-md text-white hover:bg-white/10 focus:outline-none transition duration-150">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden" style="background-color: #E87F24;">
-        <div class="pt-2 pb-3 space-y-1">
-            <!-- Ganti route('dashboard') jadi url('/') -->
-            <x-responsive-nav-link :href="url('/')" :active="request()->is('/')">
-                <span class="text-white">{{ __('Beranda') }}</span>
-            </x-responsive-nav-link>
-        </div>
-
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-orange-400">
-            <div class="px-4">
-                <div class="font-medium text-base text-white">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-yellow-200">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    <span class="text-white">{{ __('Profile') }}</span>
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        <span class="text-white">{{ __('Log Out') }}</span>
-                    </x-responsive-nav-link>
-                </form>
             </div>
         </div>
     </div>
