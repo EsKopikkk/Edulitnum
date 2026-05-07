@@ -58,7 +58,6 @@
     <div class="blob -top-20 -left-20"></div>
     <div class="blob -bottom-20 -right-20" style="background: #73A5CA;"></div>
 
-    <!-- SIDEBAR (Sama dengan Dashboard) -->
     <aside class="w-72 bg-white/80 backdrop-blur-xl rounded-[3rem] shadow-2xl shadow-edu-orange/10 p-8 flex flex-col border border-white">
         <div class="flex items-center gap-4 mb-12">
             <div class="w-12 h-12 bg-edu-orange rounded-2xl flex items-center justify-center shadow-lg animate-bounce duration-[3s]">
@@ -94,7 +93,6 @@
         </form>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-1 flex flex-col gap-6">
 
         <header class="w-full bg-white/60 backdrop-blur-md rounded-[2.5rem] p-6 flex justify-between items-center border border-white">
@@ -104,24 +102,21 @@
             </div>
             <div class="flex items-center gap-4 bg-edu-orange p-2 pr-6 rounded-3xl shadow-lg shadow-edu-orange/20">
                 <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center font-black text-edu-orange">
-                    {{ substr(Auth::user()->name, 0, 1) }}
+                    {{ substr(Auth::user()->name ?? 'G', 0, 1) }}
                 </div>
                 <span class="text-white font-bold text-sm tracking-tight">Guru Aktif</span>
             </div>
         </header>
 
-        <!-- FORM CONTAINER -->
         <div class="flex-1 bg-white rounded-[3rem] p-8 lg:p-10 border border-white shadow-xl shadow-black/5">
             <form method="POST" action="{{ route('soal.store') }}">
                 @csrf
                 
-                <!-- Pertanyaan -->
                 <div class="mb-8">
                     <label class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Pertanyaan</label>
                     <textarea name="pertanyaan" rows="3" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 text-edu-dark font-medium transition-all" placeholder="Tuliskan pertanyaanmu di sini..." required></textarea>
                 </div>
 
-                <!-- Kategori & Fase -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div>
                         <label class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Kategori Soal</label>
@@ -140,7 +135,6 @@
                     </div>
                 </div>
 
-                <!-- Pilihan Jawaban -->
                 <div class="mb-10">
                     <div class="flex items-center gap-2 mb-4">
                         <label class="text-[11px] font-black text-gray-400 uppercase tracking-widest block">Pilihan Jawaban</label>
@@ -150,22 +144,18 @@
                     <div class="space-y-4">
                         @foreach(['A','B','C','D'] as $p)
                         <div class="flex items-center gap-4 bg-gray-50 p-2 pr-4 rounded-2xl border-2 border-gray-100 hover:border-edu-orange/30 transition-colors group">
-                            <!-- Radio Kunci Jawaban -->
                             <div class="pl-4">
                                 <input type="radio" name="kunci_jawaban" value="{{ $p }}" class="w-5 h-5 text-edu-orange focus:ring-edu-orange border-gray-300 cursor-pointer" required>
                             </div>
-                            <!-- Label A, B, C, D -->
                             <div class="w-8 h-8 rounded-xl bg-white flex items-center justify-center font-black text-gray-400 group-hover:text-edu-orange shadow-sm">
                                 {{ $p }}
                             </div>
-                            <!-- Input Teks Jawaban -->
-                            <input type="text" name="pilihan_{{ strtolower($p) }}" class="flex-1 bg-transparent border-none p-2 text-edu-dark font-medium focus:ring-0" placeholder="Ketik pilihan jawaban {{ $p }}..." required>
+                            <input type="text" name="opsi_{{ strtolower($p) }}" class="flex-1 bg-transparent border-none p-2 text-edu-dark font-medium focus:ring-0" placeholder="Ketik pilihan jawaban {{ $p }}..." required>
                         </div>
                         @endforeach
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="flex gap-4 pt-6 border-t border-gray-100">
                     <button type="submit" class="bg-edu-orange text-white px-8 py-4 rounded-2xl font-black text-sm hover:-translate-y-1 hover:shadow-lg hover:shadow-edu-orange/30 transition-all">
                         SIMPAN SOAL

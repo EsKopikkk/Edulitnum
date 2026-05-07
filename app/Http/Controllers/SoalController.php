@@ -10,7 +10,6 @@ class SoalController extends Controller
     // Menampilkan Bank Soal
     public function index()
     {
-        // PERBAIKAN: Menggunakan variabel $soal agar sinkron dengan file Blade
         $soal = Soal::latest()->get(); 
         return view('guru.bank_soal', compact('soal'));
     }
@@ -24,15 +23,15 @@ class SoalController extends Controller
     // Menyimpan Soal Baru ke Database
     public function store(Request $request)
     {
-        // PERBAIKAN: Menyesuaikan dengan atribut "name" di form buat_soal.blade.php
+        // SUDAH DIPERBAIKI: Menggunakan opsi_a, opsi_b, dst sesuai database
         $request->validate([
             'pertanyaan' => 'required',
             'kategori' => 'required',
             'fase' => 'required',
-            'pilihan_a' => 'required',
-            'pilihan_b' => 'required',
-            'pilihan_c' => 'required',
-            'pilihan_d' => 'required',
+            'opsi_a' => 'required',
+            'opsi_b' => 'required',
+            'opsi_c' => 'required',
+            'opsi_d' => 'required',
             'kunci_jawaban' => 'required',
         ]);
 
