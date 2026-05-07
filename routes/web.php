@@ -4,47 +4,41 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\SoalController;
-use App\Http\Controllers\KelasController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KelasController; // Dipindah ke atas agar rapi
 
-// ==========================================
-// 1. RUTE PUBLIK (Bebas Akses Tanpa Login)
-// ==========================================
+// 1. Halaman Muka (Landing Page) - Bebas diakses tanpa login
 Route::get('/', function () {
-    // Sesuaikan 'landing' dengan nama file buatan temanmu (misal: landing.blade.php)
-    return view('welcome_edulitnum'); 
-})->name('welcome_edulitnum');
-
-
-// 3. Halaman Dashboard - Wajib Login Dulu
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
-    Route::get('/guru/dashboard', [DashboardController::class, 'guru'])->name('guru.dashboard');
-    Route::get('/siswa/dashboard', [DashboardController::class, 'siswa'])->name('siswa.dashboard');
+    return view('welcome');
 });
 
-// Rute Profil Bawaan Breeze
+// 2. Halaman Dashboard - Wajib Login Dulu
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+//ubah
+// 3. Rute Profile (Bawaan Breeze)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Rute Khusus Admin (Kelola Akun)
+// 4. Rute Khusus Admin (Manajemen Akun)
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/akun', [UserController::class, 'index'])->name('admin.akun.index');
     Route::post('/admin/akun', [UserController::class, 'store'])->name('admin.akun.store');
     Route::delete('/admin/akun/{id}', [UserController::class, 'destroy'])->name('admin.akun.destroy');
 });
 
-// Rute Resource (Kelas & Soal)
+// 5. Rute Kelas
 Route::middleware(['auth'])->group(function () {
     Route::resource('kelas', KelasController::class);
+});
+
+// 6. Rute Soal
+Route::middleware(['auth'])->group(function () {
     Route::resource('soal', SoalController::class);
 });
 
-// Tambahkan rute ini untuk Leaderboard
-Route::get('/guru/leaderboard', [SoalController::class, 'leaderboard'])->name('guru.leaderboard');
-
-// Otentikasi Bawaan Breeze (Login, Register, Logout)
+// Memuat rute autentikasi bawaan Breeze (Login, Register, dll)
 require __DIR__.'/auth.php';
