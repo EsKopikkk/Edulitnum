@@ -13,8 +13,8 @@ class UserController extends Controller
     public function index()
     {
         // Ambil semua data user kecuali yang role-nya admin (agar admin tidak menghapus dirinya sendiri)
-        $users = User::where('role', '!=', 'admin')->get(); 
-        
+        $users = User::where('role', '!=', 'admin')->get();
+
         return view('admin.kelola_akun', compact('users'));
     }
 
@@ -38,6 +38,37 @@ class UserController extends Controller
         return back()->with('success', 'Akun berhasil ditambahkan!');
     }
 
+
+    // 1. Fungsi untuk MENAMPILKAN halaman form edit
+    public function edit($id)
+    {
+        // Cari user berdasarkan ID yang diklik
+        $user = User::findOrFail($id);
+
+        // Lempar data user tersebut ke halaman view 'edit_akun'
+        return view('admin.edit_akun', compact('user'));
+    }
+
+    // 2. Fungsi untuk MENYIMPAN data yang sudah diedit ke database
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        // Validasi data yang masuk
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'role' => ['required', 'in:admin,guru,siswa'],
+        ]);
+
+        // Update data di database
+        $user->update([
+            'name' => $request->name,
+            'role' => $request->role,
+        ]);
+
+        // Kembalikan ke halaman tabel dengan pesan sukses
+        return redirect()->route('admin.akun.index')->with('success', 'Data user berhasil diperbarui!');
+    }
     // Fungsi untuk menghapus akun
     public function destroy($id)
     {

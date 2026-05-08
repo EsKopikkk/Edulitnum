@@ -30,10 +30,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Rute Khusus Admin (Kelola Akun)
+// Rute Khusus Admin (Kelola Akun
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/akun', [UserController::class, 'index'])->name('admin.akun.index');
+    Route::get('/admin/akun/create', [UserController::class, 'create'])->name('admin.akun.create'); // <-- BARU
     Route::post('/admin/akun', [UserController::class, 'store'])->name('admin.akun.store');
+    Route::get('/admin/akun/{id}/edit', [UserController::class, 'edit'])->name('admin.akun.edit'); // <-- BARU
+    Route::put('/admin/akun/{id}', [UserController::class, 'update'])->name('admin.akun.update'); // <-- BARU
     Route::delete('/admin/akun/{id}', [UserController::class, 'destroy'])->name('admin.akun.destroy');
 });
 
