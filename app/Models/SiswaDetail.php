@@ -13,7 +13,11 @@ class SiswaDetail extends Model
         'kelas_id',
     ];
 
-    // Relasi kembali ke Kelas
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'kelas_id');

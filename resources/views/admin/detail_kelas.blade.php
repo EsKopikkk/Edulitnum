@@ -21,10 +21,10 @@
                 <h4 class="text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4">Guru Pengampu</h4>
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 bg-edu-orange/10 rounded-2xl flex items-center justify-center text-edu-orange font-bold text-xl">
-                        {{ substr($kelas->guru->nama_lengkap ?? '?', 0, 1) }}
+                        {{ substr($kelas->guru->name ?? '?', 0, 1) }}
                     </div>
                     <div>
-                        <p class="font-bold text-edu-dark">{{ $kelas->guru->nama_lengkap ?? 'Belum Ditentukan' }} </p>
+                        <p class="font-bold text-edu-dark">{{ $kelas->guru->name ?? 'Belum Ditentukan' }} </p>
                         <p class="text-xs text-gray-400">Wali Kelas / Fasilitator</p>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                     <tbody class="divide-y divide-gray-50">
                         @forelse($kelas->siswa as $s)
                             <tr class="hover:bg-gray-50/30 transition-colors">
-                                <td class="px-8 py-5 font-bold text-edu-dark">{{ $s->user->nama_lengkap ?? 'Siswa Tanpa Nama' }} [cite: 8, 73]</td>
+                                <td class="px-8 py-5 font-bold text-edu-dark">{{ $s->user->name ?? 'Siswa Tanpa Nama' }}</td>
                                 <td class="px-8 py-5 text-right">
                                     <button class="text-xs font-black text-gray-300 hover:text-red-500 uppercase tracking-widest transition-colors">Keluarkan</button>
                                 </td>

@@ -42,7 +42,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Rute Resource (Kelas & Soal)
 Route::middleware(['auth'])->group(function () {
-    Route::resource('kelas', KelasController::class);
+    Route::resource('kelas', KelasController::class)->parameters(['kelas' => 'kelas']);
     Route::resource('soal', SoalController::class);
 });
 
@@ -50,7 +50,9 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/guru/leaderboard', [SoalController::class, 'leaderboard'])->name('guru.leaderboard');
 
 Route::get('/admin/kelas/{id}/modul', [KelasController::class, 'manageModul'])->name('admin.kelas.modul');
-
-// Route untuk melihat detail siswa dan guru di dalam kelas
 Route::get('/admin/kelas/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
 require __DIR__.'/auth.php';
+
+Route::get('/kelas/{kelas}/siswa', [KelasController::class, 'kelolaSiswa'])->name('kelas.siswa');
+Route::post('/kelas/{kelas}/siswa', [KelasController::class, 'tambahSiswa'])->name('kelas.siswa.tambah');
+Route::delete('/kelas/{kelas_id}/siswa/{user_id}', [KelasController::class, 'hapusSiswa'])->name('kelas.siswa.hapus');
