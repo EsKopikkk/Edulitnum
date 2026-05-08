@@ -41,7 +41,7 @@
                     <button class="px-4 py-2 bg-white text-gray-500 hover:bg-edu-blue hover:text-white rounded-xl shadow-sm transition-all text-xs font-bold mr-2">Edit</button>
                     <button class="px-4 py-2 bg-white text-red-500 hover:bg-red-500 hover:text-white rounded-xl shadow-sm transition-all text-xs font-bold">Hapus</button>
                 </td>
-            </tr>
+            </tr> 
             @endforeach
         </tbody>
     </table>
