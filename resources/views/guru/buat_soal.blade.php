@@ -45,7 +45,6 @@
             border-radius: 50%;
         }
 
-        /* Custom Input Focus */
         input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: #E87F24;
@@ -70,16 +69,23 @@
         </div>
 
         <nav class="flex-1 space-y-3">
-            <a href="/guru/dashboard" class="flex items-center gap-4 px-5 py-4 text-gray-400 hover:text-edu-orange hover:bg-edu-orange/5 rounded-2xl font-bold transition-all group">
-                <svg class="w-6 h-6 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <a href="/guru/dashboard" class="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all group {{ request()->is('guru/dashboard') ? 'sidebar-active text-white' : 'text-gray-400 hover:text-edu-orange hover:bg-edu-orange/5' }}">
+                <svg class="w-6 h-6 {{ request()->is('guru/dashboard') ? '' : 'group-hover:rotate-12 transition-transform' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Dashboard
             </a>
-            <a href="{{ route('soal.index') }}" class="flex items-center gap-4 px-5 py-4 sidebar-active text-white rounded-2xl font-bold transition-all group">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+
+            <a href="{{ route('modul.index') }}" class="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all group {{ request()->routeIs('modul.*') ? 'sidebar-active text-white' : 'text-gray-400 hover:text-edu-orange hover:bg-edu-orange/5' }}">
+                <svg class="w-6 h-6 {{ request()->routeIs('modul.*') ? '' : 'group-hover:rotate-12 transition-transform' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                Modul Materi
+            </a>
+
+            <a href="{{ route('soal.index') }}" class="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all group {{ request()->routeIs('soal.*') ? 'sidebar-active text-white' : 'text-gray-400 hover:text-edu-orange hover:bg-edu-orange/5' }}">
+                <svg class="w-6 h-6 {{ request()->routeIs('soal.*') ? '' : 'group-hover:rotate-12 transition-transform' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                 Materi Saya
             </a>
-            <a href="{{ route('guru.leaderboard') }}" class="flex items-center gap-4 px-5 py-4 text-gray-400 hover:text-edu-orange hover:bg-edu-orange/5 rounded-2xl font-bold transition-all group">
-                <svg class="w-6 h-6 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+
+            <a href="{{ route('guru.leaderboard') }}" class="flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all group {{ request()->routeIs('guru.leaderboard') ? 'sidebar-active text-white' : 'text-gray-400 hover:text-edu-orange hover:bg-edu-orange/5' }}">
+                <svg class="w-6 h-6 {{ request()->routeIs('guru.leaderboard') ? '' : 'group-hover:rotate-12 transition-transform' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                 Nilai Siswa
             </a>
         </nav>
@@ -113,6 +119,16 @@
                 @csrf
                 
                 <div class="mb-8">
+                    <label class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Hubungkan ke Modul Materi</label>
+                    <select name="modul_id" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 text-edu-dark font-medium cursor-pointer transition-all" required>
+                        <option value="" disabled selected>-- Pilih Modul Materi --</option>
+                        @foreach($moduls as $m)
+                            <option value="{{ $m->id }}">{{ $m->judul }} (Kelas {{ $m->kelas->nama_kelas ?? $m->kelas_id }})</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-8">
                     <label class="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Pertanyaan</label>
                     <textarea name="pertanyaan" rows="3" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 text-edu-dark font-medium transition-all" placeholder="Tuliskan pertanyaanmu di sini..." required></textarea>
                 </div>
@@ -141,19 +157,19 @@
                         <span class="text-xs text-edu-orange font-bold bg-orange-50 px-2 py-1 rounded-md">*Pilih bulatan untuk kunci jawaban</span>
                     </div>
                     
-                   <div class="space-y-4">
-    @foreach(['A','B','C','D'] as $p)
-    <div class="flex items-center gap-4 bg-gray-50 p-2 pr-4 rounded-2xl border-2 border-gray-100 hover:border-edu-orange/30 transition-colors group">
-        <div class="pl-4">
-            <input type="radio" name="jawaban_benar" value="{{ $p }}" class="w-5 h-5 text-edu-orange focus:ring-edu-orange border-gray-300 cursor-pointer" required>
-        </div>
-        <div class="w-8 h-8 rounded-xl bg-white flex items-center justify-center font-black text-gray-400 group-hover:text-edu-orange shadow-sm">
-            {{ $p }}
-        </div>
-        <input type="text" name="opsi_{{ strtolower($p) }}" class="flex-1 bg-transparent border-none p-2 text-edu-dark font-medium focus:ring-0" placeholder="Ketik pilihan jawaban {{ $p }}..." required>
-    </div>
-    @endforeach
-</div>
+                    <div class="space-y-4">
+                        @foreach(['A','B','C','D'] as $p)
+                        <div class="flex items-center gap-4 bg-gray-50 p-2 pr-4 rounded-2xl border-2 border-gray-100 hover:border-edu-orange/30 transition-colors group">
+                            <div class="pl-4">
+                                <input type="radio" name="kunci_jawaban" value="{{ $p }}" class="w-5 h-5 text-edu-orange focus:ring-edu-orange border-gray-300 cursor-pointer" required>
+                            </div>
+                            <div class="w-8 h-8 rounded-xl bg-white flex items-center justify-center font-black text-gray-400 group-hover:text-edu-orange shadow-sm">
+                                {{ $p }}
+                            </div>
+                            <input type="text" name="pilihan_{{ strtolower($p) }}" class="flex-1 bg-transparent border-none p-2 text-edu-dark font-medium focus:ring-0" placeholder="Ketik pilihan jawaban {{ $p }}..." required>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
 
                 <div class="flex gap-4 pt-6 border-t border-gray-100">
