@@ -11,48 +11,62 @@ use App\Http\Controllers\DashboardController;
 // 1. RUTE PUBLIK (Bebas Akses Tanpa Login)
 // ==========================================
 Route::get('/', function () {
-    // Sesuaikan 'landing' dengan nama file buatan temanmu (misal: landing.blade.php)
     return view('welcome_edulitnum'); 
 })->name('welcome_edulitnum');
 
-
-// 3. Halaman Dashboard - Wajib Login Dulu
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
-    Route::get('/guru/dashboard', [DashboardController::class, 'guru'])->name('guru.dashboard');
-    Route::get('/siswa/dashboard', [DashboardController::class, 'siswa'])->name('siswa.dashboard');
-});
-
-// Rute Profil Bawaan Breeze
+// ==========================================
+// 2. RUTE UMUM (Wajib Login, Role Bebas)
+// ==========================================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Rute Khusus Admin (Kelola Akun
-Route::middleware(['auth'])->group(function () {
+// ==========================================
+// 3. RUTE KHUSUS ADMIN SAJA
+// ==========================================
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
+    
+    // -- Kelola Akun User --
     Route::get('/admin/akun', [UserController::class, 'index'])->name('admin.akun.index');
-    Route::get('/admin/akun/create', [UserController::class, 'create'])->name('admin.akun.create'); // <-- BARU
+    Route::get('/admin/akun/create', [UserController::class, 'create'])->name('admin.akun.create');
     Route::post('/admin/akun', [UserController::class, 'store'])->name('admin.akun.store');
-    Route::get('/admin/akun/{id}/edit', [UserController::class, 'edit'])->name('admin.akun.edit'); // <-- BARU
-    Route::put('/admin/akun/{id}', [UserController::class, 'update'])->name('admin.akun.update'); // <-- BARU
+    Route::get('/admin/akun/{id}/edit', [UserController::class, 'edit'])->name('admin.akun.edit');
+    Route::put('/admin/akun/{id}', [UserController::class, 'update'])->name('admin.akun.update');
     Route::delete('/admin/akun/{id}', [UserController::class, 'destroy'])->name('admin.akun.destroy');
+
+    // -- Kelola Kelas & Modul (Sekarang DIKUNCI HANYA UNTUK ADMIN) --
+    Route::resource('kelas', KelasController::class)->parameters(['kelas' => 'kelas']);
+    Route::get('/admin/kelas/{id}/modul', [KelasController::class, 'manageModul'])->name('admin.kelas.modul');
+    Route::get('/admin/kelas/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
+    
+    // -- Kelola Siswa di dalam Kelas --
+    Route::get('/kelas/{kelas}/siswa', [KelasController::class, 'kelolaSiswa'])->name('kelas.siswa');
+    Route::post('/kelas/{kelas}/siswa', [KelasController::class, 'tambahSiswa'])->name('kelas.siswa.tambah');
+    Route::delete('/kelas/{kelas_id}/siswa/{user_id}', [KelasController::class, 'hapusSiswa'])->name('kelas.siswa.hapus');
 });
 
-// Rute Resource (Kelas & Soal)
-Route::middleware(['auth'])->group(function () {
-    Route::resource('kelas', KelasController::class)->parameters(['kelas' => 'kelas']);
+// HAPUS GRUP "RUTE GABUNGAN" KARENA SUDAH DIPINDAH SEMUA KE ATAS
+
+// ==========================================
+// 4. RUTE KHUSUS GURU SAJA
+// ==========================================
+Route::middleware(['auth', 'role:guru'])->group(function () {
+    Route::get('/guru/dashboard', [DashboardController::class, 'guru'])->name('guru.dashboard');
+    Route::get('/guru/leaderboard', [SoalController::class, 'leaderboard'])->name('guru.leaderboard');
+    
+    // Asumsi Guru yang berhak mengelola Bank Soal
     Route::resource('soal', SoalController::class);
 });
 
-// Tambahkan rute ini untuk Leaderboard
-Route::get('/guru/leaderboard', [SoalController::class, 'leaderboard'])->name('guru.leaderboard');
+// ==========================================
+// 5. RUTE KHUSUS SISWA SAJA
+// ==========================================
+Route::middleware(['auth', 'role:siswa'])->group(function () {
+    Route::get('/siswa/dashboard', [DashboardController::class, 'siswa'])->name('siswa.dashboard');
+});
 
-Route::get('/admin/kelas/{id}/modul', [KelasController::class, 'manageModul'])->name('admin.kelas.modul');
-Route::get('/admin/kelas/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
+
 require __DIR__.'/auth.php';
-
-Route::get('/kelas/{kelas}/siswa', [KelasController::class, 'kelolaSiswa'])->name('kelas.siswa');
-Route::post('/kelas/{kelas}/siswa', [KelasController::class, 'tambahSiswa'])->name('kelas.siswa.tambah');
-Route::delete('/kelas/{kelas_id}/siswa/{user_id}', [KelasController::class, 'hapusSiswa'])->name('kelas.siswa.hapus');

@@ -9,14 +9,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    public function handle(Request $request, Closure $next, $role): Response
+    // Tambahkan ...$roles agar bisa menerima lebih dari 1 role (contoh: role:admin,guru)
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        // Cek apakah user sudah login DAN role-nya sesuai dengan yang diminta rute
-        if (Auth::check() && Auth::user()->role === $role) {
+        // Cek apakah user sudah login DAN role-nya ada di dalam daftar yang diizinkan
+        if (Auth::check() && in_array(Auth::user()->role, $roles)) {
             return $next($request); // Silakan masuk!
         }
 
-        // Kalau role tidak sesuai (misal Siswa mau masuk halaman Admin), lempar ke Dashboard!
-        return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses ke halaman ini!');
+        // Kalau melanggar, tangkap role aslinya
+        $userRole = Auth::user()->role;
+
+        // Tendang balik ke dashboard masing-masing sesuai role aslinya!
+        return redirect()->route($userRole . '.dashboard')
+            ->with('error', 'Akses ditolak! Anda tidak memiliki izin ke halaman tersebut.');
     }
 }

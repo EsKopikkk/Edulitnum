@@ -38,7 +38,11 @@ class UserController extends Controller
         return back()->with('success', 'Akun berhasil ditambahkan!');
     }
 
-
+    public function create()
+    {
+        // Panggil file form tambah data (tidak perlu pakai .blade.php)
+        return view('admin.tambah_akun');
+    }
     // 1. Fungsi untuk MENAMPILKAN halaman form edit
     public function edit($id)
     {
