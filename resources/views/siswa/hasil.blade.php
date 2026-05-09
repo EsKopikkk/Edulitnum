@@ -54,7 +54,7 @@
                        class="bg-edu-orange text-white px-8 py-5 rounded-3xl font-black text-lg shadow-xl shadow-edu-orange/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
                        🏠 BERANDA
                     </a>
-                    <a href="#"
+                    <a href="{{ route('siswa.game.index') }}"
                        class="bg-edu-blue text-white px-8 py-5 rounded-3xl font-black text-lg shadow-xl shadow-edu-blue/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3">
                        🎮 MAIN GAME
                     </a>

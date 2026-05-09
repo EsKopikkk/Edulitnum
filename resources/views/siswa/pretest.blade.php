@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -18,80 +18,102 @@
                         'edu-orange': '#E87F24',
                         'edu-yellow': '#FFD93D',
                         'edu-blue': '#73A5CA',
-                        'edu-blue-dark': '#5A8EB4',
-                        'edu-bg': '#F0F9FF',
+                        'edu-bg': '#FEFDDF',
                         'edu-dark': '#1A202C',
                     },
-                    fontFamily: { 'fredoka': ['Fredoka', 'sans-serif'] }
+                    fontFamily: {
+                        'fredoka': ['Fredoka', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif']
+                    }
                 }
             }
         }
     </script>
     <style>
-        body { font-family: 'Fredoka', sans-serif; background-color: #F0F9FF; overflow-x: hidden; }
-        .soal-card { display: none; }
+        body { font-family: 'Poppins', sans-serif; background-color: #FEFDDF; overflow: hidden; }
+        .font-kids { font-family: 'Fredoka', sans-serif; }
+
+        .soal-card { display: none; opacity: 0; }
         .soal-card.active { display: block; }
 
-        .option-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .peer:checked + .option-card {
-            background-color: #73A5CA !important;
-            color: white !important;
-            border-color: #5A8EB4 !important;
-            transform: scale(1.05);
+        /* Tombol Jawaban Gaya Game */
+        .option-btn {
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-bottom-width: 6px;
         }
-        .peer:checked + .option-card span { color: white !important; }
-        .peer:checked + .option-card .option-circle { background-color: rgba(255,255,255,0.2); color: white; }
+        .option-btn:hover { transform: translateY(-3px); }
+        .option-btn:active { transform: translateY(3px); border-bottom-width: 2px; }
 
-        .cursor { display: inline-block; width: 3px; background-color: #1A202C; margin-left: 3px; }
+        .peer:checked + .option-btn {
+            background-color: #E87F24 !important;
+            color: white !important;
+            border-color: #C66A1E !important;
+            transform: translateY(3px);
+            border-bottom-width: 2px;
+        }
+
+        /* Timer Circle Animation */
+        .timer-svg { transform: rotate(-90deg); }
+        #timer-circle {
+            transition: stroke-dashoffset 1s linear;
+            stroke-dasharray: 283;
+            stroke-dashoffset: 0;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col relative">
+<body class="min-h-screen flex flex-col">
 
-    <nav class="bg-white/80 backdrop-blur-md p-5 shadow-sm sticky top-0 z-50 border-b-4 border-edu-blue/20">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <a href="{{ route('siswa.dashboard') }}" class="flex items-center gap-2 bg-gray-100 px-5 py-2.5 rounded-2xl hover:bg-edu-orange hover:text-white transition-all font-black text-xs tracking-widest">
-                🏠 HOME
+    <nav class="p-6 bg-white/80 backdrop-blur-md shadow-sm border-b-4 border-edu-orange/10 z-40">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <a href="{{ route('siswa.dashboard') }}" class="font-black text-edu-orange hover:scale-105 transition-all flex items-center gap-2">
+                <span class="text-2xl">🏠</span> <span class="hidden md:block">MENU UTAMA</span>
             </a>
 
-            <div class="flex-1 max-w-md mx-8 text-center">
-                <span id="soal-counter" class="text-edu-blue font-black text-sm uppercase tracking-tighter">MISI 1 / {{ count($daftarSoal) }}</span>
-                <div class="w-full bg-gray-200 h-3 rounded-full mt-1 border-2 border-white shadow-inner">
-                    <div id="progress-bar" class="bg-edu-blue h-full rounded-full transition-all duration-700" style="width: 0%"></div>
+            <div class="flex-1 max-w-xl mx-10 text-center">
+                <div class="flex justify-between mb-2">
+                    <span id="soal-counter" class="text-xs font-black text-edu-dark/40 uppercase tracking-widest">Misi 1 / {{ count($daftarSoal) }}</span>
+                    <span class="text-xs font-black text-edu-orange uppercase tracking-widest">Progress</span>
+                </div>
+                <div class="w-full bg-edu-yellow/20 h-4 rounded-full border-2 border-white shadow-inner overflow-hidden">
+                    <div id="progress-bar" class="bg-edu-yellow h-full rounded-full shadow-lg transition-all duration-700" style="width: 0%"></div>
                 </div>
             </div>
-            <div class="w-24"></div>
+
+            <div class="relative w-16 h-16 flex items-center justify-center">
+                <svg class="timer-svg w-16 h-16">
+                    <circle cx="32" cy="32" r="28" stroke="#f3f4f6" stroke-width="6" fill="none" />
+                    <circle id="timer-circle" cx="32" cy="32" r="28" stroke="#E87F24" stroke-width="6" fill="none" stroke-linecap="round" />
+                </svg>
+                <span id="timer-text" class="absolute font-black text-edu-dark text-lg font-kids">30</span>
+            </div>
         </div>
     </nav>
 
-    <main class="flex-grow flex items-center justify-center p-6">
-        <form id="exam-form" action="{{ route('siswa.pretest.simpan') }}" method="POST" class="max-w-4xl w-full">
+    <main class="flex-grow flex items-center justify-center p-8 relative">
+        <form id="exam-form" action="{{ route('siswa.pretest.simpan') }}" method="POST" class="max-w-6xl w-full">
             @csrf
 
             @foreach($daftarSoal as $index => $soal)
-            <div class="soal-card {{ $index == 0 ? 'active' : '' }}" data-index="{{ $index }}" data-text="{{ $soal->pertanyaan }}" data-animated="false">
-                <div class="bg-white rounded-[3.5rem] p-10 md:p-14 shadow-[0_20px_60px_rgba(115,165,202,0.15)] border-4 border-white relative">
+            <div class="soal-card {{ $index == 0 ? 'active' : '' }}" data-index="{{ $index }}" data-text="{{ $soal->pertanyaan }}">
 
-                    <div class="flex justify-center -mt-24 mb-12">
-                        <div class="bg-white px-8 py-3 rounded-2xl shadow-xl border-2 border-edu-blue/10 font-black text-edu-blue uppercase tracking-widest text-sm flex items-center gap-3">
-                            <span class="text-xl">{{ $soal->kategori == 'numerasi' ? '🔢' : '📚' }}</span>
-                            {{ strtoupper($soal->kategori) }}
+                <div class="flex flex-col lg:flex-row gap-10 items-center">
+
+                    <div class="lg:w-1/2 text-center lg:text-left">
+                        <div class="inline-block bg-edu-blue/10 text-edu-blue px-6 py-2 rounded-full font-black text-xs uppercase tracking-widest mb-6">
+                           ✨ Misi {{ $soal->kategori }}
                         </div>
+                        <h2 id="text-target-{{ $index }}" class="text-3xl md:text-5xl font-black text-edu-dark leading-tight font-kids mb-8"></h2>
                     </div>
 
-                    <div class="text-center min-h-[120px] mb-12">
-                        <h2 id="text-target-{{ $index }}" class="text-2xl md:text-3xl font-bold text-gray-800 leading-snug inline"></h2>
-                        <span id="cursor-{{ $index }}" class="cursor text-3xl">|</span>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="lg:w-1/2 w-full grid grid-cols-1 gap-4">
                         @foreach(['a', 'b', 'c', 'd'] as $opsi)
-                        <label class="option-item-{{ $index }} opacity-0 translate-y-4 cursor-pointer block">
+                        <label class="option-item-{{ $index }} opacity-0 translate-x-10 cursor-pointer block">
                             <input type="radio" name="jawaban[{{ $soal->id }}]" value="{{ $opsi }}" class="peer hidden" required>
-                            <div class="option-card bg-white border-4 border-edu-blue/5 p-6 rounded-[2rem] flex items-center gap-5 shadow-sm hover:border-edu-blue/30 transition-all">
-                                <div class="option-circle w-12 h-12 rounded-2xl bg-edu-blue/10 flex items-center justify-center shrink-0 font-black text-edu-blue text-xl">
+                            <div class="option-btn bg-white border-2 border-gray-100 p-6 rounded-3xl flex items-center gap-6 shadow-sm">
+                                <div class="w-12 h-12 bg-edu-yellow/20 rounded-2xl flex items-center justify-center font-black text-edu-orange text-xl shrink-0">
                                     {{ strtoupper($opsi) }}
                                 </div>
-                                <span class="text-gray-800 font-bold text-lg leading-tight">
+                                <span class="text-gray-700 font-bold text-xl leading-snug">
                                     {{ $soal->{'pilihan_'.$opsi} }}
                                 </span>
                             </div>
@@ -100,21 +122,21 @@
                     </div>
                 </div>
 
-                <div class="mt-12 flex justify-between items-center px-4">
+                <div class="mt-16 flex justify-between items-center max-w-6xl mx-auto border-t-2 border-edu-orange/5 pt-10">
                     @if($index > 0)
-                    <button type="button" onclick="prevSoal({{ $index }})" class="group bg-white text-edu-blue font-black px-8 py-4 rounded-2xl border-2 border-edu-blue/10 hover:bg-edu-blue hover:text-white transition-all flex items-center gap-3">
-                        <span class="group-hover:-translate-x-1 transition-transform">⬅️</span> KEMBALI
-                    </button>
+                        <button type="button" onclick="prevSoal({{ $index }})" class="text-edu-dark/40 font-black flex items-center gap-3 hover:text-edu-orange transition-all">
+                            <span>⬅️</span> SEBELUMNYA
+                        </button>
                     @else <div></div> @endif
 
                     @if($index < count($daftarSoal) - 1)
-                    <button type="button" onclick="nextSoal({{ $index }})" class="group bg-edu-blue text-white pl-10 pr-6 py-5 rounded-[2.5rem] font-black text-2xl shadow-2xl shadow-edu-blue/40 hover:bg-edu-dark transition-all flex items-center gap-6">
-                        LANJUT <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center group-hover:translate-x-2 transition-transform text-sm">➡️</div>
-                    </button>
+                        <button type="button" onclick="nextSoal({{ $index }})" class="bg-edu-orange text-white px-12 py-5 rounded-[2rem] font-black text-xl shadow-xl shadow-edu-orange/30 hover:bg-edu-dark transition-all">
+                            LANJUTKAN 🚀
+                        </button>
                     @else
-                    <button type="submit" class="bg-edu-green text-white px-16 py-6 rounded-[2.5rem] font-black text-3xl shadow-2xl shadow-green-500/30 hover:scale-105 active:scale-95 transition-all bg-[#6BCB77]">
-                        🏁 SELESAI
-                    </button>
+                        <button type="submit" class="bg-edu-blue text-white px-20 py-6 rounded-[2rem] font-black text-3xl shadow-xl shadow-edu-blue/30 hover:bg-edu-dark transition-all">
+                            SELESAI 🏁
+                        </button>
                     @endif
                 </div>
             </div>
@@ -125,42 +147,51 @@
     <script>
         gsap.registerPlugin(TextPlugin);
         const totalSoal = {{ count($daftarSoal) }};
+        let timeLeft = 30;
+        let timerId = null;
 
+        // --- Logika Timer ---
+        function startTimer() {
+            timeLeft = 30;
+            const circle = document.getElementById('timer-circle');
+            const text = document.getElementById('timer-text');
+
+            clearInterval(timerId);
+            timerId = setInterval(() => {
+                timeLeft--;
+                text.innerText = timeLeft;
+
+                // Animasi Stroke Circle
+                const offset = 283 - (timeLeft / 30) * 283;
+                circle.style.strokeDashoffset = offset;
+
+                if (timeLeft <= 5) {
+                    circle.style.stroke = "#EF4444"; // Berubah merah saat mau habis
+                    gsap.to(text, { scale: 1.2, repeat: 1, yoyo: true, duration: 0.2 });
+                } else {
+                    circle.style.stroke = "#E87F24";
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerId);
+                    alert("Waktu habis! Ayo segera pilih jawabanmu.");
+                }
+            }, 1000);
+        }
+
+        // --- Animasi Soal ---
         function animateSoal(index) {
             const card = document.querySelector(`.soal-card[data-index="${index}"]`);
-            if (!card) return;
-
             const text = card.getAttribute('data-text');
             const target = `#text-target-${index}`;
-            const cursor = `#cursor-${index}`;
             const options = `.option-item-${index}`;
 
-            // Jika sudah pernah tampil, tampilkan instan (Solusi Masuk/Keluar Soal)
-            if (card.getAttribute('data-animated') === 'true') {
-                gsap.set(target, { text: text });
-                gsap.set(cursor, { display: 'none' });
-                gsap.set(options, { opacity: 1, y: 0 });
-                return;
-            }
+            startTimer(); // Reset timer tiap ganti soal
 
-            // Animasi Mengetik
-            gsap.to(target, {
-                duration: text.length * 0.03,
-                text: text,
-                ease: "none",
-                onComplete: () => {
-                    gsap.to(cursor, { opacity: 0, duration: 0.5 });
-                    // Animasi Opsi Muncul Stagger
-                    gsap.to(options, {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.5,
-                        stagger: 0.15,
-                        ease: "back.out(1.7)"
-                    });
-                    card.setAttribute('data-animated', 'true');
-                }
-            });
+            const tl = gsap.timeline();
+            tl.fromTo(card, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.5 })
+              .to(target, { duration: text.length * 0.04, text: text, ease: "none" })
+              .to(options, { opacity: 1, x: 0, stagger: 0.1, duration: 0.5, ease: "back.out(1.7)" }, "-=0.2");
         }
 
         window.onload = () => {
@@ -170,37 +201,38 @@
 
         function nextSoal(idx) {
             const current = document.querySelector(`.soal-card[data-index="${idx}"]`);
-            const inputs = current.querySelectorAll('input[type="radio"]:checked');
+            const checked = current.querySelector('input[type="radio"]:checked');
 
-            if (inputs.length === 0) {
-                // Shake effect jika belum diisi
+            if (!checked) {
                 gsap.to(current, { x: 10, repeat: 5, yoyo: true, duration: 0.05 });
                 return;
             }
 
             const next = document.querySelector(`.soal-card[data-index="${idx + 1}"]`);
-            current.classList.remove('active');
-            next.classList.add('active');
-
-            updateProgress(idx + 2);
-            animateSoal(idx + 1);
+            gsap.to(current, { opacity: 0, x: -30, duration: 0.3, onComplete: () => {
+                current.classList.remove('active');
+                next.classList.add('active');
+                updateProgress(idx + 2);
+                animateSoal(idx + 1);
+            }});
         }
 
         function prevSoal(idx) {
             const current = document.querySelector(`.soal-card[data-index="${idx}"]`);
             const prev = document.querySelector(`.soal-card[data-index="${idx - 1}"]`);
 
-            current.classList.remove('active');
-            prev.classList.add('active');
-
-            updateProgress(idx);
-            animateSoal(idx - 1);
+            gsap.to(current, { opacity: 0, x: 30, duration: 0.3, onComplete: () => {
+                current.classList.remove('active');
+                prev.classList.add('active');
+                updateProgress(idx);
+                animateSoal(idx - 1);
+            }});
         }
 
         function updateProgress(step) {
             const percent = (step / totalSoal) * 100;
-            document.getElementById('progress-bar').style.width = percent + '%';
-            document.getElementById('soal-counter').innerText = `MISI ${step} / ${totalSoal}`;
+            gsap.to('#progress-bar', { width: percent + '%', duration: 1 });
+            document.getElementById('soal-counter').innerText = `Misi ${step} / ${totalSoal}`;
         }
     </script>
 </body>

@@ -7,6 +7,7 @@ use App\Http\Controllers\SoalController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UjianController;
+use App\Http\Controllers\GameController;
 
 // ==========================================
 // 1. RUTE PUBLIK (Bebas Akses Tanpa Login)
@@ -73,6 +74,18 @@ Route::middleware(['auth', 'role:siswa'])->group(function () {
     Route::get('/siswa/pretest', [UjianController::class, 'index'])->name('siswa.pretest');
     Route::post('/siswa/pretest/simpan', [UjianController::class, 'simpanJawaban'])->name('siswa.pretest.simpan');
     Route::get('/siswa/pretest/selesai', [UjianController::class, 'selesai'])->name('siswa.pretest.selesai');
+
+    // routes/web.php
+
+Route::middleware(['auth', 'role:siswa'])->group(function () {
+    // Dashboard dan Pretest
+    Route::get('/siswa/dashboard', [DashboardController::class, 'siswa'])->name('siswa.dashboard');
+    Route::get('/siswa/pretest', [UjianController::class, 'index'])->name('siswa.pretest.index');
+
+    // Pastikan Bagian Game Ini ADA dan NAMANYA Sesuai
+    Route::get('/siswa/game', [GameController::class, 'index'])->name('siswa.game.index');
+    Route::get('/siswa/game/play/{tipe}', [GameController::class, 'play'])->name('siswa.game.play');
+});
 });
 
 
