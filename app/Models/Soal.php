@@ -2,22 +2,30 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Soal extends Model
 {
-    protected $table = 'soal';
+    use HasFactory;
 
-    // Pastikan semua kolom ini terdaftar agar bisa disimpan ke database
+    protected $table = 'soal'; // Pastikan nama tabelnya benar
+
     protected $fillable = [
-        'pertanyaan',
-        'kategori',
-        'fase',
-        'pilihan_a',
-        'pilihan_b',
-        'pilihan_c',
-        'pilihan_d',
-        'kunci_jawaban',
-        'status_validasi',
+        'modul_id', // WAJIB ADA
+        'pertanyaan', 
+        'pilihan_a', 
+        'pilihan_b', 
+        'pilihan_c', 
+        'pilihan_d', 
+        'kunci_jawaban', 
+        'kategori', 
+        'fase'
     ];
-}   
+
+    // INI DIA "PINTU" YANG WAJIB ADA
+    public function modul()
+    {
+        return $this->belongsTo(Modul::class, 'modul_id');
+    }
+}
