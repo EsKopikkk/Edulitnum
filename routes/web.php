@@ -6,12 +6,13 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\SoalController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UjianController;
 
 // ==========================================
 // 1. RUTE PUBLIK (Bebas Akses Tanpa Login)
 // ==========================================
 Route::get('/', function () {
-    return view('welcome_edulitnum'); 
+    return view('welcome_edulitnum');
 })->name('welcome_edulitnum');
 
 // ==========================================
@@ -28,7 +29,7 @@ Route::middleware('auth')->group(function () {
 // ==========================================
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
-    
+
     // -- Kelola Akun User --
     Route::get('/admin/akun', [UserController::class, 'index'])->name('admin.akun.index');
     Route::get('/admin/akun/create', [UserController::class, 'create'])->name('admin.akun.create');
@@ -41,7 +42,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('kelas', KelasController::class)->parameters(['kelas' => 'kelas']);
     Route::get('/admin/kelas/{id}/modul', [KelasController::class, 'manageModul'])->name('admin.kelas.modul');
     Route::get('/admin/kelas/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
-    
+
     // -- Kelola Siswa di dalam Kelas --
     Route::get('/kelas/{kelas}/siswa', [KelasController::class, 'kelolaSiswa'])->name('kelas.siswa');
     Route::post('/kelas/{kelas}/siswa', [KelasController::class, 'tambahSiswa'])->name('kelas.siswa.tambah');
@@ -56,7 +57,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:guru'])->group(function () {
     Route::get('/guru/dashboard', [DashboardController::class, 'guru'])->name('guru.dashboard');
     Route::get('/guru/leaderboard', [SoalController::class, 'leaderboard'])->name('guru.leaderboard');
-    
+
     // Asumsi Guru yang berhak mengelola Bank Soal
     Route::resource('soal', SoalController::class);
 });
@@ -65,7 +66,13 @@ Route::middleware(['auth', 'role:guru'])->group(function () {
 // 5. RUTE KHUSUS SISWA SAJA
 // ==========================================
 Route::middleware(['auth', 'role:siswa'])->group(function () {
+    // Rute Dashboard Siswa yang sudah ada
     Route::get('/siswa/dashboard', [DashboardController::class, 'siswa'])->name('siswa.dashboard');
+
+    // Tambahkan Rute Fitur Pre-test (Tugas Anggota 4)
+    Route::get('/siswa/pretest', [UjianController::class, 'index'])->name('siswa.pretest');
+    Route::post('/siswa/pretest/simpan', [UjianController::class, 'simpanJawaban'])->name('siswa.pretest.simpan');
+    Route::get('/siswa/pretest/selesai', [UjianController::class, 'selesai'])->name('siswa.pretest.selesai');
 });
 
 
