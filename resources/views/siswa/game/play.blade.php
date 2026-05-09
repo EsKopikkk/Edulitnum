@@ -198,9 +198,42 @@
             document.getElementById('overlay-emoji').innerText = "👑";
             document.getElementById('overlay-title').innerText = `Selamat, ${namaSiswa}!`;
             document.getElementById('overlay-desc').innerText = `Kamu berhasil menamatkan misi! \n Skor Akhir: ${score}`;
+
             const btn = document.getElementById('overlay-btn');
             btn.innerText = "AMBIL HADIAH";
-            btn.onclick = () => window.location.href = "{{ route('siswa.dashboard') }}";
+
+            // --- PERBAIKAN LOGIKA DISINI ---
+            btn.onclick = () => {
+                btn.innerText = "Menyimpan...";
+                btn.disabled = true; // Mencegah klik ganda
+
+                fetch("{{ route('siswa.game.save-score') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        score: score,
+                        type: 'literasi'
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // HANYA pindah halaman jika server sudah membalas sukses
+                        window.location.href = "{{ route('siswa.dashboard') }}";
+                    } else {
+                        alert("Gagal menyimpan skor: " + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    // Tetap balik ke dashboard jika terjadi error jaringan
+                    window.location.href = "{{ route('siswa.dashboard') }}";
+                });
+            };
 
             overlay.classList.remove('hidden');
             gsap.fromTo(overlay,

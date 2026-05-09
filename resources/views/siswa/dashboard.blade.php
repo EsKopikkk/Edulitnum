@@ -85,7 +85,7 @@
                 <p class="text-lg md:text-xl font-medium text-white/90 mb-10 max-w-lg">Siap mengalahkan tantangan hari ini dan jadi bintang kelas?</p>
 
                 <div class="flex flex-col sm:flex-row items-center gap-6 justify-center md:justify-start">
-                    <a href="{{ route('siswa.pretest.index') }}" class="main-btn-anim bg-white text-edu-orange px-12 py-5 rounded-[2rem] font-black text-xl shadow-2xl flex items-center gap-3 hover:bg-edu-dark hover:text-white transition-all group">
+                    <a href="{{ route('siswa.pretest') }}" class="main-btn-anim bg-white text-edu-orange px-12 py-5 rounded-[2rem] font-black text-xl shadow-2xl flex items-center gap-3 hover:bg-edu-dark hover:text-white transition-all group">
                         <span>🚀 MULAI PRE-TEST</span>
                     </a>
                 </div>

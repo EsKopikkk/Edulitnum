@@ -76,13 +76,12 @@ Route::middleware(['auth', 'role:siswa'])->prefix('siswa')->name('siswa.')->grou
     Route::post('/pretest/simpan', [UjianController::class, 'simpanJawaban'])->name('pretest.simpan');
     Route::get('/pretest/selesai', [UjianController::class, 'selesai'])->name('pretest.selesai');
 
-    // Fitur Game (Tugas Akmal)
-    // URL: /siswa/game
+    // Fitur Game
     Route::get('/game', [GameController::class, 'index'])->name('game.index');
     Route::get('/game/play/{tipe}', [GameController::class, 'play'])->name('game.play');
 
     // Pipa Data: Simpan Skor Game ke Database
-    Route::post('/game/save-score', [GameController::class, 'saveScore'])->name('game.save-score');
+    Route::post('/game/save-score', [UjianController::class, 'saveScore'])->name('game.save-score');
 });
 // ==========================================
 // 6. AUTH ROUTES
