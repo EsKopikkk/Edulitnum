@@ -6,7 +6,9 @@ use App\Models\Soal;
 use App\Models\Modul;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\SoalImport; 
+use App\Imports\SoalImport;
+
+
 
 class SoalController extends Controller
 {
