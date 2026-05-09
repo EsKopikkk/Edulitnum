@@ -22,4 +22,10 @@ class Modul extends Model
     {
         return $this->hasMany(Soal::class);
     }
+
+    public function modul()
+{
+    // Tambahkan \App\Models\ di depannya
+    return $this->belongsTo(\App\Models\Modul::class, 'modul_id');
+}
 }

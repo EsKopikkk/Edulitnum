@@ -6,8 +6,7 @@ use App\Models\Soal;
 use App\Models\Modul;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\SoalImport;
-
+use App\Imports\SoalImport; // <--- PASTIKAN INI ADA P
 class SoalController extends Controller
 {
     // Menampilkan Bank Soal
