@@ -41,7 +41,7 @@
         <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-8"></div>
 
         {{-- Form --}}
-        <form method="POST" action="{{ route('kelas.update', $kelas) }}">
+        <form method="POST" action="{{ route('kelas.update', $kelas->id) }}">
             @csrf
             @method('PUT')
 

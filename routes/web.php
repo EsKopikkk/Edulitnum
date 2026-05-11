@@ -37,7 +37,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::resource('akun', UserController::class)->names('admin.akun');
 
     // Kelola Kelas & Modul
-    Route::resource('kelas', KelasController::class);
+    Route::resource('kelas', KelasController::class)->parameters(['kelas' => 'kelas']);
     Route::get('/kelas/{id}/modul', [KelasController::class, 'manageModul'])->name('admin.kelas.modul');
 
     // Kelola Siswa di dalam Kelas
