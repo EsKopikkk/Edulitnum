@@ -46,6 +46,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::delete('/kelas/{kelas_id}/siswa/{user_id}', [KelasController::class, 'hapusSiswa'])->name('kelas.siswa.hapus');
 });
 
+
+
+
 // ==========================================
 // 4. RUTE KHUSUS GURU
 // ==========================================
