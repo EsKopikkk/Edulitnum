@@ -131,7 +131,6 @@
                     <label class="block text-xs font-bold uppercase tracking-widest text-edu-blue mb-2 ml-1">Aku adalah...</label>
                     <div class="relative">
                         <select name="role" class="input-field w-full px-6 py-4 rounded-2xl text-edu-dark font-semibold appearance-none cursor-pointer">
-                            <option value="siswa">Siswa</option>
                             <option value="guru">Guru</option>
                             <option value="admin">Admin</option>
                         </select>

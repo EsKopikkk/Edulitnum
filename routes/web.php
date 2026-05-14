@@ -18,6 +18,11 @@ Route::get('/', function () {
     return view('welcome_edulitnum');
 })->name('welcome_edulitnum');
 
+// RUTE KHUSUS LOGIN SISWA (BARU)
+Route::get('/login-siswa', function () {
+    return view('login_siswa'); 
+})->middleware('guest')->name('login.siswa');
+
 // ==========================================
 // 2. RUTE UMUM (Wajib Login)
 // ==========================================
