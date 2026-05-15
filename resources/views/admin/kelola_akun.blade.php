@@ -31,12 +31,12 @@
                             @elseif($user->role == 'guru')
                                 <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-[10px] tracking-widest uppercase">GURU</span>
                             @else
-                                <span class="px-3 py-1 bg-edu-blue/10 text-edu-blue rounded-full text-[10px] tracking-widest uppercase">SISWA</span>
+                                <span class="px-3 py-1 bg-edu-blue/10 text-edu-blue rounded-full text-[10px] tracking-widest uppercase">NIS {{ $user->nis ?? '-' }}</span>
                             @endif
                         </td>
-                        <td class="py-5 text-right flex justify-end items-center">
+                        <td class="py-5 text-right flex justify-end items-center gap-2">
                             <a href="{{ route('admin.akun.edit', $user->id) }}"
-                                class="px-4 py-2 bg-white text-gray-500 hover:bg-edu-blue hover:text-white rounded-xl shadow-sm transition-all text-xs font-bold mr-2 inline-block">
+                                class="px-4 py-2 bg-white text-gray-500 hover:bg-edu-blue hover:text-white rounded-xl shadow-sm transition-all text-xs font-bold">
                                 Edit
                             </a>
 

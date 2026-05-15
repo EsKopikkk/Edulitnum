@@ -1,40 +1,105 @@
 @extends('layouts.admin')
 
-@section('title', 'Daftar Modul | Edulitnum')
+@section('title', 'Kelola Modul | Edulitnum')
 @section('page_title') Modul <span class="text-edu-orange">{{ $kelas->nama_kelas }}</span> @endsection
-@section('page_subtitle', 'Materi Literasi & Numerasi Fase ' . $kelas->fase)
+@section('page_subtitle', 'Kelola materi pembelajaran untuk kelas ini')
 
 @section('content')
-<div class="w-full space-y-8 font-poppins">
+<div class="w-full space-y-8">
     <a href="{{ route('kelas.index') }}" class="inline-flex items-center gap-2 text-gray-400 hover:text-edu-orange font-black text-xs uppercase tracking-widest transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
         Kembali ke Daftar Kelas
     </a>
 
-    <div class="grid grid-cols-1 gap-6">
-        @forelse($moduls as $m)
-            <div class="bg-white p-8 rounded-[2.5rem] shadow-[0_15px_40px_rgba(0,0,0,0.05)] border border-white flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div class="flex-1">
-                    <span class="inline-block px-4 py-1.5 {{ $m->kategori == 'literasi' ? 'bg-blue-50 text-blue-500' : 'bg-orange-50 text-orange-500' }} text-[10px] font-black rounded-full uppercase tracking-widest mb-3">
-                        {{ $m->kategori }} [cite: 89]
-                    </span>
-                    <h4 class="text-xl font-bold text-edu-dark leading-tight">{{ $m->pertanyaan }}</h4> [cite: 88]
-                </div>
-                
-                <div class="flex items-center gap-3">
-                    <button class="px-6 py-3 bg-gray-50 text-gray-400 font-bold rounded-xl hover:text-edu-orange hover:bg-orange-50 transition-all text-xs uppercase">Edit</button>
-                    <button class="px-6 py-3 bg-gray-50 text-gray-400 font-bold rounded-xl hover:text-red-500 hover:bg-red-50 transition-all text-xs uppercase">Hapus</button>
-                </div>
+    {{-- Form Tambah Modul --}}
+    <div class="bg-white/60 backdrop-blur-md p-10 rounded-[40px] border border-white shadow-xl shadow-black/5">
+        <h3 class="text-xl font-black text-edu-dark mb-6">Tambah Modul Baru</h3>
+
+        <form action="{{ route('admin.kelas.modul.tambah', $kelas->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            @csrf
+
+            <div>
+                <label class="block text-sm font-black text-edu-dark uppercase mb-2">Judul Modul</label>
+                <input type="text" name="judul" required
+                    class="w-full px-5 py-4 rounded-2xl bg-white border-2 border-transparent focus:border-edu-blue focus:ring-0 text-edu-dark font-medium transition-all shadow-sm outline-none"
+                    placeholder="Contoh: Bab 1 - Puisi Modern">
+                @error('judul')
+                    <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                @enderror
             </div>
-        @empty
-            <div class="py-24 px-10 bg-white/40 border-4 border-dashed border-white rounded-[4rem] text-center">
-                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-300">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                </div>
-                <h3 class="text-2xl font-black text-gray-300 uppercase tracking-tighter">Belum ada materi</h3>
-                <p class="text-gray-400 font-medium mt-2">Materi untuk Fase {{ $kelas->fase }} belum tersedia di Bank Soal.</p>
+
+            <div>
+                <label class="block text-sm font-black text-edu-dark uppercase mb-2">Deskripsi</label>
+                <textarea name="deskripsi" rows="3"
+                    class="w-full px-5 py-4 rounded-2xl bg-white border-2 border-transparent focus:border-edu-blue focus:ring-0 text-edu-dark font-medium transition-all shadow-sm outline-none"
+                    placeholder="Deskripsi singkat tentang modul ini"></textarea>
+                @error('deskripsi')
+                    <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                @enderror
             </div>
-        @endforelse
+
+            <div>
+                <label class="block text-sm font-black text-edu-dark uppercase mb-2">File Materi (PDF/Gambar)</label>
+                <input type="file" name="file_materi" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png"
+                    class="w-full px-5 py-4 rounded-2xl bg-white border-2 border-transparent focus:border-edu-blue focus:ring-0 text-edu-dark font-medium transition-all shadow-sm outline-none">
+                <p class="text-gray-500 text-xs mt-2">Ukuran maksimal: 10MB (PDF, DOC, PPT, JPG, PNG)</p>
+                @error('file_materi')
+                    <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <button type="submit" class="px-8 py-4 bg-edu-orange text-white font-black rounded-2xl shadow-lg shadow-edu-orange/30 hover:-translate-y-1 transition-all">
+                + Tambah Modul
+            </button>
+        </form>
+    </div>
+
+    {{-- Daftar Modul --}}
+    <div class="bg-white/60 backdrop-blur-md p-10 rounded-[40px] border border-white shadow-xl shadow-black/5">
+        <h3 class="text-xl font-black text-edu-dark mb-6">Daftar Modul ({{ $moduls->count() }})</h3>
+
+        @if($moduls->isEmpty())
+            <div class="py-16 text-center">
+                <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <p class="text-gray-400 text-lg font-semibold">Belum ada modul</p>
+                <p class="text-gray-300 text-sm mt-2">Tambahkan modul di atas untuk mulai</p>
+            </div>
+        @else
+            <div class="space-y-4">
+                @foreach($moduls as $modul)
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 hover:border-edu-orange transition-colors flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-edu-dark text-lg">{{ $modul->judul }}</h4>
+                            @if($modul->deskripsi)
+                                <p class="text-gray-500 text-sm mt-1">{{ Str::limit($modul->deskripsi, 100) }}</p>
+                            @endif
+                            @if($modul->file_materi)
+                                <p class="text-gray-400 text-xs mt-2 flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" /></svg>
+                                    📎 Ada file terlampir
+                                </p>
+                            @endif
+                        </div>
+
+                        <div class="flex items-center gap-2 w-full md:w-auto">
+                            <a href="{{ route('admin.kelas.modul.progress', [$kelas->id, $modul->id]) }}"
+                                class="flex-1 md:flex-none px-4 py-2 bg-blue-50 text-blue-600 font-bold rounded-xl hover:bg-blue-100 transition-all text-xs uppercase">
+                                👁 Lihat Progress
+                            </a>
+                            <form action="{{ route('admin.kelas.modul.hapus', [$kelas->id, $modul->id]) }}" method="POST" class="flex-1 md:flex-none" onsubmit="return confirm('Hapus modul ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-full px-4 py-2 bg-red-50 text-red-600 font-bold rounded-xl hover:bg-red-100 transition-all text-xs uppercase">
+                                    🗑 Hapus
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
     </div>
 </div>
 @endsection

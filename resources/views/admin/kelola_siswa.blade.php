@@ -21,7 +21,7 @@
 {{-- Form Tambah Siswa --}}
 <div class="bg-white/60 backdrop-blur-md p-8 rounded-[32px] border border-white shadow-xl mb-8">
     <h2 class="text-lg font-black text-edu-dark mb-4">Tambah Siswa ke Kelas</h2>
-    <form method="POST" action="{{ route('kelas.siswa.tambah', $kelas->id) }}" class="flex gap-4">
+    <form method="POST" action="{{ route('admin.kelas.siswa.tambah', $kelas->id) }}" class="flex gap-4">
         @csrf
         <select name="user_id" class="flex-1 rounded-2xl border border-gray-200 px-4 py-3 focus:outline-none focus:border-edu-blue" required>
             <option value="">-- Pilih Siswa --</option>
@@ -54,7 +54,7 @@
                 <td class="py-4 font-semibold text-edu-dark">{{ $detail->user->name }}</td>
                 <td class="py-4 text-gray-500">{{ $detail->user->email }}</td>
                 <td class="py-4">
-                    <form action="{{ route('kelas.siswa.hapus', [$kelas->id, $detail->user_id]) }}" method="POST" onsubmit="return confirm('Keluarkan siswa ini dari kelas?')">
+                    <form action="{{ route('admin.kelas.siswa.hapus', [$kelas->id, $detail->user_id]) }}" method="POST" onsubmit="return confirm('Keluarkan siswa ini dari kelas?')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="text-red-400 font-bold hover:text-red-600 transition-colors">Keluarkan</button>

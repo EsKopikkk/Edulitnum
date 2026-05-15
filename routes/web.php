@@ -41,14 +41,21 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     // Kelola Akun User
     Route::resource('akun', UserController::class)->names('admin.akun');
 
+    // Notifikasi Password Reset
+    Route::get('/notifikasi', [UserController::class, 'notifikasi'])->name('admin.notifikasi');
+    Route::post('/notifikasi/{id}/selesai', [UserController::class, 'markNotificationDone'])->name('admin.notifikasi.selesai');
+
     // Kelola Kelas & Modul
     Route::resource('kelas', KelasController::class)->parameters(['kelas' => 'kelas']);
     Route::get('/kelas/{id}/modul', [KelasController::class, 'manageModul'])->name('admin.kelas.modul');
+    Route::post('/kelas/{kelas}/modul', [KelasController::class, 'tambahModul'])->name('admin.kelas.modul.tambah');
+    Route::delete('/kelas/{kelas_id}/modul/{modul_id}', [KelasController::class, 'hapusModul'])->name('admin.kelas.modul.hapus');
+    Route::get('/kelas/{kelas}/modul/{modul}/progress', [KelasController::class, 'lihatProgressModul'])->name('admin.kelas.modul.progress');
 
     // Kelola Siswa di dalam Kelas
-    Route::get('/kelas/{kelas}/siswa', [KelasController::class, 'kelolaSiswa'])->name('kelas.siswa');
-    Route::post('/kelas/{kelas}/siswa', [KelasController::class, 'tambahSiswa'])->name('kelas.siswa.tambah');
-    Route::delete('/kelas/{kelas_id}/siswa/{user_id}', [KelasController::class, 'hapusSiswa'])->name('kelas.siswa.hapus');
+    Route::get('/kelas/{kelas}/siswa', [KelasController::class, 'kelolaSiswa'])->name('admin.kelas.siswa');
+    Route::post('/kelas/{kelas}/siswa', [KelasController::class, 'tambahSiswa'])->name('admin.kelas.siswa.tambah');
+    Route::delete('/kelas/{kelas_id}/siswa/{user_id}', [KelasController::class, 'hapusSiswa'])->name('admin.kelas.siswa.hapus');
 });
 
 // ==========================================

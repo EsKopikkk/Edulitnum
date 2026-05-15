@@ -47,6 +47,7 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $user = Auth::user();
             $role = strtolower($user->role);
+            $selectedRole = strtolower($request->role ?? '');
 
             // ==========================================
             // 🛡️ SATPAM LAPIS DUA: VALIDASI PINTU MASUK
@@ -65,6 +66,14 @@ class AuthenticatedSessionController extends Controller
                 Auth::logout(); // Batalkan login secara paksa
                 return back()->withErrors([
                     'name' => 'Akses ditolak! Siswa harap login melalui halaman Pelaut (Pantai).',
+                ])->onlyInput('name');
+            }
+
+            // C. VALIDASI ROLE: Periksa apakah role yang dipilih sesuai dengan role user di database
+            if ($loginField === 'name' && $selectedRole && $selectedRole !== $role) {
+                Auth::logout(); // Batalkan login secara paksa
+                return back()->withErrors([
+                    'role' => "Akses ditolak! Anda adalah {$role}, bukan {$selectedRole}.",
                 ])->onlyInput('name');
             }
             // ==========================================

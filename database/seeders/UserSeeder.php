@@ -77,6 +77,8 @@ class UserSeeder extends Seeder
                     'role' => $userData['role'],
                     'nis' => $userData['nis'],
                     'password' => Hash::make('password123'), // Semua password diseragamkan dulu
+
+                    // password untuk pak Budi Subianto sudah di reset yak jdinya password1234
                 ]
             );
         }
