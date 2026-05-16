@@ -71,33 +71,18 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->group(function () {
 });
 
 // ==========================================
-// 5. RUTE KHUSUS SISWA
+// 5. RUTE KHUSUS SISWA (Sudah Dilindungi Satpam)
 // ==========================================
-Route::middleware(['auth', 'role:siswa'])->prefix('siswa')->name('siswa.')->group(function () {
+Route::middleware(['auth', 'role:siswa', 'force.pretest'])->prefix('siswa')->name('siswa.')->group(function () {
 
-    // Dashboard Utama Siswa
     Route::get('/dashboard', [DashboardController::class, 'siswa'])->name('dashboard');
-
-    // Fitur Pre-test (Tugas Anggota 4)
-    // Panggilan di Blade: route('siswa.pretest')
     Route::get('/pretest', [UjianController::class, 'index'])->name('pretest');
     Route::post('/pretest/simpan', [UjianController::class, 'simpanJawaban'])->name('pretest.simpan');
-    Route::get('/pretest/selesai', [UjianController::class, 'selesai'])->name('pretest.selesai');
+    Route::get('/pretest/selesai', [UjianController::class, 'selesai'])->name('pretest.selesai'); // Sesuaikan jika nama rutenya berbeda di timmu
 
-    // Fitur Game
-    // Panggilan di Blade: route('siswa.game.index')
     Route::get('/game', [GameController::class, 'index'])->name('game.index');
-
-    // Rute Play Game (Kita buat fleksibel, bisa polosan atau pakai parameter tipe)
-    Route::get('/game/play', [GameController::class, 'playWithoutType'])->name('game.play.default');
     Route::get('/game/play/{tipe}', [GameController::class, 'play'])->name('game.play');
-
-    // Fitur Modul Belajar (Literasi & Numerasi)
-    // Panggilan di Blade: route('siswa.modul.index', ['kategori' => 'literasi'])
     Route::get('/modul/{kategori}', [ModulController::class, 'siswaShow'])->name('modul.show');
-
-    // Pipa Data: Simpan Skor Game ke Database
-    // Panggilan di Fetch JS: /siswa/game/save-score
     Route::post('/game/save-score', [UjianController::class, 'saveScore'])->name('game.save-score');
 });
 // ==========================================

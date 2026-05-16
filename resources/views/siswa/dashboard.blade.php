@@ -191,14 +191,20 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <a href="{{ route('siswa.pretest') }}" class="btn-3d-blue group rounded-[36px] p-6 text-white text-center font-black text-xl border-4 border-white transition-all duration-150 relative overflow-hidden flex flex-col justify-between h-56">
-                    <div class="absolute -right-4 -top-4 w-16 h-16 bg-white/10 rounded-full pointer-events-none"></div>
-                    <div class="text-5xl transform group-hover:scale-125 transition-transform duration-200">📝</div>
-                    <div>
-                        <span class="block drop-shadow uppercase tracking-wide">Misi Uji Awal</span>
-                        <span class="block text-xs font-bold text-blue-100 normal-case mt-1 bg-black/10 rounded-full py-1 px-3 inline-block">Kerjakan Pretest Yuk! 🌟</span>
+                @if(Auth::user()->is_pretest_done)
+                    <div class="bg-slate-200/60 border-2 border-slate-300 p-6 rounded-3xl opacity-70 flex flex-col items-center justify-center text-center shadow-inner">
+                        <div class="text-5xl mb-2 filter grayscale">🔒</div>
+                        <h3 class="font-black text-slate-500 font-kids text-lg">MISI AWAL SELESAI</h3>
+                        <p class="text-xs text-slate-400 font-bold max-w-[200px] mt-1">Kamu sudah menyelami tantangan ini!</p>
                     </div>
-                </a>
+                @else
+                    <a href="{{ route('siswa.pretest') }}"
+                       class="bg-white/90 border-2 border-white p-6 rounded-3xl flex flex-col items-center justify-center text-center shadow-md hover:scale-105 active:translate-y-1 transition-all group">
+                        <div class="text-5xl mb-2 group-hover:animate-bounce">🤿</div>
+                        <h3 class="font-black text-blue-950 font-kids text-lg">MISI AWAL (PRE-TEST)</h3>
+                        <p class="text-xs text-blue-900/60 font-bold max-w-[200px] mt-1">Ayo mulai penyelaman pertamamu!</p>
+                    </a>
+                @endif
 
                 <a href="{{ route('siswa.game.play', ['tipe' => 'literasi']) }}" class="btn-3d-orange group rounded-[36px] p-6 text-white text-center font-black text-xl border-4 border-white transition-all duration-150 relative overflow-hidden flex flex-col justify-between h-56">
                     <div class="absolute -right-4 -top-4 w-16 h-16 bg-white/10 rounded-full pointer-events-none"></div>

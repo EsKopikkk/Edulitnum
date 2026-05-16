@@ -134,7 +134,7 @@
                             else { $bintang = 1; }
                         @endphp
                         @for($i=0; $i < 5; $i++)
-                            <span class="star-anim text-3xl md:text-4xl {{ $i < $bintang ? 'text-amber-400' : 'text-slate-300/60' }} drop-shadow-md select-none">⭐</span>
+                            <span class="star-anim text-3xl md:text-4xl {{ $i < $bintang ? 'text-amber-400' : 'text-slate-400 grayscale' }} drop-shadow-md select-none">⭐</span>
                         @endfor
                     </div>
 

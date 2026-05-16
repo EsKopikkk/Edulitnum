@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        // --- 2. SEED DATA GURU (Random) ---
+        // --- 2. SEED DATA GURU ---
         $gurus = ['Pak Budi', 'Ibu Sarah', 'Pak Andi'];
         foreach ($gurus as $namaGuru) {
             $email = strtolower(str_replace(' ', '', $namaGuru)) . '@edulitnum.test';
@@ -35,19 +35,26 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // --- 3. SEED DATA SISWA (Manual sesuai permintaan) ---
-        $siswas = ['Akmal', 'Ojhy', 'Riyadhy', 'Yunita', 'Astri'];
-        foreach ($siswas as $namaSiswa) {
+        // --- 3. SEED DATA SISWA (Format NIS Berkode Kelas) ---
+        $siswas = [
+            ['name' => 'Akmal', 'kelas' => 'A', 'number' => '001'], // NIS: EDA001
+            ['name' => 'Ojhy',  'kelas' => 'A', 'number' => '002'], // NIS: EDA002
+            ['name' => 'Riyadhy','kelas' => 'B', 'number' => '001'], // NIS: EDB001
+            ['name' => 'Yunita', 'kelas' => 'B', 'number' => '002'], // NIS: EDB002
+            ['name' => 'Astri',  'kelas' => 'B', 'number' => '003'], // NIS: EDB003
+        ];
+
+        foreach ($siswas as $data) {
             User::create([
-                'name' => $namaSiswa,
-                'email' => strtolower($namaSiswa) . '@edulitnum.test',
+                'name' => $data['name'],
+                'email' => strtolower($data['name']) . '@edulitnum.test',
+                'nis' => 'ED' . $data['kelas'] . $data['number'],
                 'password' => $password,
                 'role' => 'siswa',
             ]);
         }
 
-        // --- 4. PANGGIL SOAL SEEDER (Tugas Member 4) ---
-        // Pastikan class SoalSeeder sudah kamu buat sebelumnya
+        // --- 4. PANGGIL SOAL SEEDER ---
         $this->call([
             SoalSeeder::class,
         ]);

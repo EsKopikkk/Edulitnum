@@ -43,7 +43,6 @@
         .soal-card { display: none; opacity: 0; transform: scale(0.98); }
         .soal-card.active { display: block; }
 
-        /* Glassmorphism Panel Lembut */
         .glass-panel {
             background: rgba(255, 255, 255, 0.45);
             backdrop-filter: blur(12px);
@@ -51,7 +50,6 @@
             border: 2px solid rgba(255, 255, 255, 0.6);
         }
 
-        /* Tombol Pilihan Jawaban Gaya Game 3D Ramping */
         .option-btn {
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 5px 0 0 #E2E8F0;
@@ -59,7 +57,6 @@
         .option-btn:hover { transform: translateY(-2px); }
         .option-btn:active { transform: translateY(3px); box-shadow: 0 0px 0 0 #E2E8F0; }
 
-        /* Gaya Saat Jawaban Dipilih Anak */
         .peer:checked + .option-btn {
             background-color: #E87F24 !important;
             color: white !important;
@@ -68,15 +65,13 @@
             transform: translateY(3px);
         }
 
-        /* Timer Lingkar */
         .timer-svg { transform: rotate(-90deg); }
         #timer-circle {
             transition: stroke-dashoffset 1s linear;
-            stroke-dasharray: 283;
+            stroke-dasharray: 125.6;
             stroke-dashoffset: 0;
         }
 
-        /* Gelembung Udara */
         .bubble {
             position: absolute;
             bottom: -50px;
@@ -97,7 +92,6 @@
 
     <div class="fixed inset-0 z-0 pointer-events-none" id="bubbles-container"></div>
 
-    {{-- NAVIGASI ATAS - SEKARANG HANYA ADA 1 DAN LEBIH RAMPIING --}}
     <nav class="p-3 glass-panel shadow-md border-b-2 border-white/40 z-40 mx-4 my-2 rounded-full relative shrink-0">
         <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
 
@@ -125,7 +119,6 @@
         </div>
     </nav>
 
-    {{-- KONTEN UTAMA KARTU SOAL - DIBUAT PAS DI TENGAH MONITOR --}}
     <main class="flex-grow flex items-center justify-center p-4 md:px-8 md:pb-6 relative z-10 min-h-0">
         <form id="exam-form" action="{{ route('siswa.pretest.simpan') }}" method="POST" class="max-w-5xl w-full">
             @csrf
@@ -183,6 +176,19 @@
         </form>
     </main>
 
+    <div id="welcome-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-blue-950/60 backdrop-blur-md">
+        <div id="modal-box" class="glass-panel max-w-md w-full bg-white/95 rounded-[2.5rem] p-8 text-center border-4 border-white shadow-2xl scale-0 opacity-0 relative">
+            <div class="text-6xl mb-4 select-none animate-bounce">🚢</div>
+            <h2 class="text-2xl md:text-3xl font-black text-blue-950 font-kids mb-2 tracking-wide">Selamat Datang, <br>Penyelam Cilik!</h2>
+            <p class="text-blue-900 font-bold text-sm leading-relaxed max-w-xs mx-auto mb-6">
+                Sebelum kita bisa berenang melihat terumbu karang dan bermain game, ayo ikuti <span class="text-edu-orange">Misi Penyelaman Pertama</span> ini dulu ya! 🤿✨
+            </p>
+            <button type="button" onclick="closeWelcomeModal()" class="w-full py-4 bg-edu-orange hover:bg-orange-600 active:translate-y-1 text-white font-black text-base rounded-2xl shadow-[0_5px_0_0_#B55A0A] hover:shadow-[0_3px_0_0_#B55A0A] transition-all border-2 border-white font-kids tracking-wide">
+                SIAP, AYO MELUNCUR! 🚀
+            </button>
+        </div>
+    </div>
+
     <script>
         gsap.registerPlugin(TextPlugin);
         const totalSoal = {{ count($daftarSoal) }};
@@ -205,9 +211,7 @@
                     hiddenInput.value = timeLeft;
                 }
 
-                // Hitung lingkaran stroke dash sesuai ukuran w-12 (r=20, keliling=2*pi*r=125.6)
                 const offset = 125.6 - (timeLeft / 30) * 125.6;
-                circle.style.strokeDasharray = "125.6";
                 circle.style.strokeDashoffset = offset;
 
                 if (timeLeft <= 5) {
@@ -241,8 +245,15 @@
 
         window.onload = () => {
             updateProgress(1);
-            animateSoal(0);
+            gsap.to("#modal-box", { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.2)" });
         };
+
+        function closeWelcomeModal() {
+            gsap.to("#welcome-modal", { opacity: 0, duration: 0.3, onComplete: () => {
+                document.getElementById("welcome-modal").style.display = "none";
+                animateSoal(0);
+            }});
+        }
 
         function nextSoal(idx) {
             const current = document.querySelector(`.soal-card[data-index="${idx}"]`);
@@ -257,9 +268,7 @@
             gsap.to(current, { opacity: 0, x: -20, duration: 0.2, onComplete: () => {
                 current.classList.remove('active');
                 next.classList.add('active');
-
                 currentActiveIndex = idx + 1;
-
                 updateProgress(idx + 2);
                 animateSoal(idx + 1);
             }});
@@ -272,9 +281,7 @@
             gsap.to(current, { opacity: 0, x: 20, duration: 0.2, onComplete: () => {
                 current.classList.remove('active');
                 prev.classList.add('active');
-
                 currentActiveIndex = idx - 1;
-
                 updateProgress(idx);
                 animateSoal(idx - 1);
             }});
@@ -286,7 +293,6 @@
             document.getElementById('soal-counter').innerText = `Misi ${step} / ${totalSoal}`;
         }
 
-        // Generator Gelembung Air
         const bubblesContainer = document.getElementById('bubbles-container');
         for (let i = 0; i < 12; i++) {
             let bubble = document.createElement('div');

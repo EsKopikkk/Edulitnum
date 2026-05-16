@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class UjianController extends Controller
 {
-    /**
-     * Menampilkan daftar soal pre-test
-     */
+    // Menampilkan daftar soal pre-test
     public function index()
     {
         $daftarSoal = Soal::where('status_validasi', true)
@@ -28,13 +26,11 @@ class UjianController extends Controller
         return view('siswa.pretest', compact('daftarSoal'));
     }
 
-    /**
-     * Menyimpan jawaban pre-test (Form Submit) dengan Logika Kecepatan Waktu
-     */
+    // Menyimpan jawaban pre-test dan kalkulasi skor berdasarkan kecepatan waktu
     public function simpanJawaban(Request $request)
     {
         $jawabanSiswa = $request->input('jawaban', []);
-        $sisaWaktuSiswa = $request->input('sisa_waktu', []); // Tangkap array sisa waktu dari blade
+        $sisaWaktuSiswa = $request->input('sisa_waktu', []);
 
         $idSoal = array_keys($jawabanSiswa);
         $semuaSoal = Soal::whereIn('id', $idSoal)->get();
@@ -45,26 +41,21 @@ class UjianController extends Controller
         $benar = 0;
 
         if ($totalSoal > 0) {
-            // Kita tentukan bobot dasar per soal jika dijawab benar (misal max 100 poin per soal)
             $bobotDasarSoal = 100;
 
             foreach ($semuaSoal as $soal) {
                 $totalSkorMaksimal += $bobotDasarSoal;
 
-                // Cek apakah jawaban siswa ada dan benar
                 if (isset($jawabanSiswa[$soal->id]) && $jawabanSiswa[$soal->id] == $soal->kunci_jawaban) {
                     $benar++;
 
-                    // Ambil sisa waktu soal ini dari form (default 30 detik kalau tidak terekam)
                     $sisaWaktu = isset($sisaWaktuSiswa[$soal->id]) ? intval($sisaWaktuSiswa[$soal->id]) : 30;
-                    $waktuMenjawab = 30 - $sisaWaktu; // Berapa detik yang dihabiskan siswa
+                    $waktuMenjawab = 30 - $sisaWaktu;
 
+                    // Logika Bonus Waktu: 5 detik pertama full, setelahnya penyusutan linear konstan
                     if ($waktuMenjawab <= 5) {
-                        // 5 detik pertama -> Nilai FULL (100%)
                         $poinSoal = $bobotDasarSoal;
                     } else {
-                        // Lewat 5 detik -> Dikurangi tipis (0.5% per detik).
-                        // Detik ke-30 terpotong maksimal 12.5%, sisa nilai minimum tetap 87.5% (tidak anjlok signifikan)
                         $faktorPengurang = 1 - (($waktuMenjawab - 5) * 0.005);
                         $poinSoal = $bobotDasarSoal * max($faktorPengurang, 0.85);
                     }
@@ -73,29 +64,32 @@ class UjianController extends Controller
                 }
             }
 
-            // Skala konversi akhir menjadi 0 - 100
             $skor = ($skorDidapat / $totalSkorMaksimal) * 100;
         } else {
             $skor = 0;
         }
 
-        // Simpan atau Update hasil ke database
+        // Menyimpan atau memperbarui akumulasi hasil belajar siswa
         HasilBelajar::updateOrCreate(
             ['user_id' => Auth::id()],
             [
                 'skor_pretest' => round($skor),
-                // XP bertambah berdasarkan jumlah jawaban benar dikali 10
                 'total_xp' => DB::raw("total_xp + " . ($benar * 10))
             ]
         );
 
-        // Mengarah ke file hasil.blade.php yang sudah kita perbaiki tampilannya tadi
+        // Mengunci status siswa agar tidak bisa mengakses halaman pre-test kembali
+        $user = Auth::user();
+        if ($user) {
+            $user->is_pretest_done = true;
+            /** @var \App\Models\User $user */
+            $user->save();
+        }
+
         return view('siswa.hasil', compact('skor', 'benar', 'totalSoal'));
     }
 
-    /**
-     * Simpan Skor Game (AJAX/Fetch API)
-     */
+    // Menyimpan perolehan skor game via AJAX/Fetch API
     public function saveScore(Request $request)
     {
         $validated = $request->validate([
