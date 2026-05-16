@@ -89,7 +89,7 @@ class UjianController extends Controller
         return view('siswa.hasil', compact('skor', 'benar', 'totalSoal'));
     }
 
-    // Menyimpan perolehan skor game via AJAX/Fetch API
+    // Menyimpan perolehan skor game via AJAX/Fetch API (Hanya menyimpan jika lebih tinggi)
     public function saveScore(Request $request)
     {
         $validated = $request->validate([
@@ -102,18 +102,21 @@ class UjianController extends Controller
             $hasil = HasilBelajar::firstOrNew(['user_id' => $user_id]);
 
             if ($validated['type'] == 'literasi') {
-                $hasil->skor_game_literasi += $validated['score'];
+                // Gunakan fungsi max() agar hanya menimpa jika skor baru lebih besar
+                $hasil->skor_game_literasi = max($hasil->skor_game_literasi, $validated['score']);
             } else {
-                $hasil->skor_game_numerasi += $validated['score'];
+                $hasil->skor_game_numerasi = max($hasil->skor_game_numerasi, $validated['score']);
             }
 
-            $hasil->total_xp += $validated['score'];
             $hasil->save();
+
+            // Hitung ulang total XP terbaru untuk dikirim kembali sebagai respon JSON game
+            $newXp = $hasil->skor_pretest + $hasil->skor_game_literasi + $hasil->skor_game_numerasi;
 
             return response()->json([
                 'success' => true,
-                'message' => 'Hebat! Skor ' . $validated['type'] . ' berhasil disimpan.',
-                'new_xp' => $hasil->total_xp
+                'message' => 'Hebat! Skor ' . $validated['type'] . ' berhasil diproses.',
+                'new_xp' => $newXp
             ]);
 
         } catch (\Exception $e) {

@@ -7,7 +7,6 @@
     <title>Markas Penyelam | Edulitnum</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
 
     <style>
@@ -26,7 +25,6 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* Glassmorphism Lembut transparan seperti Box Login */
         .glass-panel {
             background: rgba(255, 255, 255, 0.45);
             backdrop-filter: blur(12px);
@@ -34,7 +32,6 @@
             border: 2px solid rgba(255, 255, 255, 0.6);
         }
 
-        /* Tombol Efek 3D Kinetik khas Game Konsol */
         .btn-3d-orange {
             background-color: #E87F24;
             box-shadow: 0 10px 0 0 #B55A0A, 0 20px 25px -5px rgba(0, 0, 0, 0.1);
@@ -61,7 +58,6 @@
             box-shadow: 0 0px 0 0 #1D4ED8;
         }
 
-        /* Animasi Gelembung Air Latar Belakang */
         .bubble {
             position: absolute;
             bottom: -50px;
@@ -100,7 +96,7 @@
 
         <div class="flex items-center gap-4">
             <div class="hidden sm:flex items-center gap-2 bg-white/60 px-4 py-1.5 rounded-full border border-white font-bold text-sm text-blue-950">
-                ⭐ <span class="text-orange-600">{{ $total_xp ?? 0 }} XP</span> Terkumpul
+                ⭐ <span class="text-orange-600">{{ $totalXp }} XP</span> Terkumpul
             </div>
 
             <form method="POST" action="{{ route('logout') }}">
@@ -127,7 +123,7 @@
 
                 <div class="mt-4 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-3 text-white font-black shadow-inner">
                     <p class="text-xs uppercase tracking-widest text-yellow-100">Total Energi Kamu</p>
-                    <p class="text-3xl tracking-wide">{{ $total_xp ?? 0 }} <span class="text-lg">XP</span></p>
+                    <p class="text-3xl tracking-wide">{{ $totalXp }} <span class="text-lg">XP</span></p>
                 </div>
             </div>
 
@@ -138,15 +134,15 @@
                 <div class="space-y-3">
                     <div class="flex justify-between items-center bg-white/70 p-3 rounded-2xl border border-white/50">
                         <span class="text-sm font-bold text-blue-900">📝 Skor Uji Pretest</span>
-                        <span class="px-3 py-1 bg-blue-600 text-white font-black rounded-xl text-sm">{{ $skor_pretest ?? 0 }}</span>
+                        <span class="px-3 py-1 bg-blue-600 text-white font-black rounded-xl text-sm">{{ $skorPretest }}</span>
                     </div>
                     <div class="flex justify-between items-center bg-white/70 p-3 rounded-2xl border border-white/50">
                         <span class="text-sm font-bold text-blue-900">🐙 Game Literasi</span>
-                        <span class="px-3 py-1 bg-orange-500 text-white font-black rounded-xl text-sm">{{ $skor_literasi ?? 0 }}</span>
+                        <span class="px-3 py-1 bg-orange-500 text-white font-black rounded-xl text-sm">{{ $skorLiterasi }}</span>
                     </div>
                     <div class="flex justify-between items-center bg-white/70 p-3 rounded-2xl border border-white/50">
                         <span class="text-sm font-bold text-blue-900">🦈 Game Numerasi</span>
-                        <span class="px-3 py-1 bg-sky-500 text-white font-black rounded-xl text-sm">{{ $skor_numerasi ?? 0 }}</span>
+                        <span class="px-3 py-1 bg-sky-500 text-white font-black rounded-xl text-sm">{{ $skorNumerasi }}</span>
                     </div>
                 </div>
             </div>
@@ -168,7 +164,7 @@
                             <span class="text-xl">🥈</span>
                             <span class="font-bold text-sm text-slate-950">Kamu ({{ Auth::user()->name }})</span>
                         </div>
-                        <span class="font-black text-slate-700 text-sm">{{ $total_xp ?? 0 }} XP</span>
+                        <span class="font-black text-slate-700 text-sm">{{ $totalXp }} XP</span>
                     </div>
                     <div class="flex items-center justify-between bg-amber-600/10 border-2 border-amber-700/30 p-3 rounded-2xl">
                         <div class="flex items-center gap-2">
