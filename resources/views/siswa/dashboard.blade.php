@@ -1,176 +1,264 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Petualang | Edulitnum</title>
+    <title>Markas Penyelam | Edulitnum</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'edu-orange': '#E87F24',
-                        'edu-yellow': '#FFD93D',
-                        'edu-blue': '#73A5CA',
-                        'edu-green': '#6BCB77',
-                        'edu-bg': '#FEFDDF',
-                        'edu-dark': '#1A202C',
-                    },
-                    fontFamily: {
-                        'fredoka': ['Fredoka', 'sans-serif'],
-                        'poppins': ['Poppins', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #FEFDDF; overflow-x: hidden; }
-        .font-kids { font-family: 'Fredoka', sans-serif; }
-
-        @keyframes float-gentle {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        .float-anim { animation: float-gentle 4s ease-in-out infinite; }
-
-        @keyframes super-pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(232, 127, 36, 0.7); }
-            50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(232, 127, 36, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(232, 127, 36, 0); }
-        }
-        .main-btn-anim { animation: super-pulse 2s infinite; }
-
-        .custom-gradient {
-            background: linear-gradient(135deg, #E87F24 0%, #FFD93D 100%);
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            background-image: url('{{ asset("images/bg-underwater.png") }}');
+            background-size: cover;
+            background-position: center bottom;
+            background-attachment: fixed;
+            background-color: #E0F2FE;
         }
 
-        .card-interactive {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
         }
-        .card-interactive:hover {
-            transform: translateY(-8px);
+
+        /* Glassmorphism Lembut transparan seperti Box Login */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        /* Tombol Efek 3D Kinetik khas Game Konsol */
+        .btn-3d-orange {
+            background-color: #E87F24;
+            box-shadow: 0 10px 0 0 #B55A0A, 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .btn-3d-orange:hover {
+            transform: translateY(4px);
+            box-shadow: 0 6px 0 0 #B55A0A, 0 15px 20px -5px rgba(0, 0, 0, 0.15);
+        }
+        .btn-3d-orange:active {
+            transform: translateY(10px);
+            box-shadow: 0 0px 0 0 #B55A0A;
+        }
+
+        .btn-3d-blue {
+            background-color: #3B82F6;
+            box-shadow: 0 10px 0 0 #1D4ED8, 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .btn-3d-blue:hover {
+            transform: translateY(4px);
+            box-shadow: 0 6px 0 0 #1D4ED8, 0 15px 20px -5px rgba(0, 0, 0, 0.15);
+        }
+        .btn-3d-blue:active {
+            transform: translateY(10px);
+            box-shadow: 0 0px 0 0 #1D4ED8;
+        }
+
+        /* Animasi Gelembung Air Latar Belakang */
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: rise linear infinite;
+            pointer-events: none;
+        }
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-110vh) scale(1.4); opacity: 0; }
+        }
+
+        .animate-float {
+            animation: float-slow 4s infinite ease-in-out;
+        }
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
         }
     </style>
 </head>
-<body class="min-h-screen pb-20">
 
-    <nav class="p-6 flex justify-between items-center bg-white/70 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-edu-orange rounded-xl flex items-center justify-center shadow-lg transform -rotate-3">
-                <span class="text-white font-black text-xl font-kids">E</span>
-            </div>
-            <span class="text-edu-dark font-black text-xl font-kids tracking-tight">EDULIT<span class="text-edu-orange">NUM</span></span>
+<body class="min-h-screen relative pb-16">
+
+    <div class="fixed inset-0 z-0 pointer-events-none" id="bubbles-container"></div>
+
+    {{-- NAVIGASI ATAS --}}
+    <nav class="relative z-10 glass-panel mx-4 my-4 px-6 py-4 rounded-full flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3 text-blue-950 font-black text-xl tracking-tight">
+            <img src="{{ asset('images/coin.svg') }}" alt="Koin" class="w-8 h-8 animate-spin" style="animation-duration: 8s;">
+            <span>JELAJAH EDULITNUM</span>
         </div>
 
-        <div class="flex items-center gap-4 bg-white px-4 py-2 rounded-2xl border-2 border-edu-orange/5">
-            <div class="text-right hidden sm:block">
-                <p class="text-[10px] font-bold text-gray-400 uppercase leading-none">Poin Saya</p>
-                <p class="text-sm font-black text-edu-dark">{{ $userProgress->total_jawaban_benar ?? 0 }} ⭐</p>
+        <div class="flex items-center gap-4">
+            <div class="hidden sm:flex items-center gap-2 bg-white/60 px-4 py-1.5 rounded-full border border-white font-bold text-sm text-blue-950">
+                ⭐ <span class="text-orange-600">{{ $total_xp ?? 0 }} XP</span> Terkumpul
             </div>
-            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'Siswa') }}&background=E87F24&color=fff" class="w-10 h-10 rounded-xl border-2 border-white shadow-sm">
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="px-5 py-2.5 bg-red-500 hover:bg-red-600 text-white font-black text-sm rounded-full shadow-[0_4px_0_0_#B91C1C] hover:shadow-[0_2px_0_0_#B91C1C] transition-all border-2 border-white active:translate-y-1">
+                    Naik ke Daratan 🚪
+                </button>
+            </form>
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto px-6 mt-10">
+    {{-- LAYOUT UTAMA DASHBOARD --}}
+    <main class="relative z-10 max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        <section class="custom-gradient rounded-[3rem] p-10 md:p-14 text-white relative overflow-hidden shadow-2xl mb-12 border-b-8 border-orange-600/20">
-            <div class="relative z-10 text-center md:text-left">
-                <h1 class="text-4xl md:text-6xl font-black font-kids mb-4 leading-tight italic">Halo, {{ explode(' ', Auth::user()->name ?? 'Sobat Petualang')[0] }}! 👋</h1>
-                <p class="text-lg md:text-xl font-medium text-white/90 mb-10 max-w-lg">Siap mengalahkan tantangan hari ini dan jadi bintang kelas?</p>
+        {{-- SISI KIRI: PROFIL, PETI NILAI & LEADERBOARD --}}
+        <div class="lg:col-span-1 space-y-6">
 
-                <div class="flex flex-col sm:flex-row items-center gap-6 justify-center md:justify-start">
-                    <a href="{{ route('siswa.pretest') }}" class="main-btn-anim bg-white text-edu-orange px-12 py-5 rounded-[2rem] font-black text-xl shadow-2xl flex items-center gap-3 hover:bg-edu-dark hover:text-white transition-all group">
-                        <span>🚀 MULAI PRE-TEST</span>
+            <div class="glass-panel rounded-[40px] p-6 text-center shadow-2xl relative overflow-hidden">
+                <div class="w-24 h-24 bg-white rounded-full shadow-md border-4 border-[#FFC81E] flex items-center justify-center mx-auto overflow-hidden p-2 animate-float">
+                    <span class="text-5xl">🤿</span>
+                </div>
+                <h2 class="text-2xl font-black text-blue-950 mt-4 tracking-tight">{{ Auth::user()->name }}</h2>
+                <p class="text-blue-800 text-xs font-bold uppercase tracking-wider mt-1">Penyelam Cilik Berbakat</p>
+
+                <div class="mt-4 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-3 text-white font-black shadow-inner">
+                    <p class="text-xs uppercase tracking-widest text-yellow-100">Total Energi Kamu</p>
+                    <p class="text-3xl tracking-wide">{{ $total_xp ?? 0 }} <span class="text-lg">XP</span></p>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-[40px] p-6 shadow-2xl">
+                <h3 class="text-lg font-black text-blue-950 mb-4 flex items-center gap-2">
+                    📋 <span>Peti Nilai Kamu</span>
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center bg-white/70 p-3 rounded-2xl border border-white/50">
+                        <span class="text-sm font-bold text-blue-900">📝 Skor Uji Pretest</span>
+                        <span class="px-3 py-1 bg-blue-600 text-white font-black rounded-xl text-sm">{{ $skor_pretest ?? 0 }}</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-white/70 p-3 rounded-2xl border border-white/50">
+                        <span class="text-sm font-bold text-blue-900">🐙 Game Literasi</span>
+                        <span class="px-3 py-1 bg-orange-500 text-white font-black rounded-xl text-sm">{{ $skor_literasi ?? 0 }}</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-white/70 p-3 rounded-2xl border border-white/50">
+                        <span class="text-sm font-bold text-blue-900">🦈 Game Numerasi</span>
+                        <span class="px-3 py-1 bg-sky-500 text-white font-black rounded-xl text-sm">{{ $skor_numerasi ?? 0 }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-[40px] p-6 shadow-2xl">
+                <h3 class="text-lg font-black text-blue-950 mb-4 flex items-center gap-2">
+                    🏆 <span>Top Penyelam Kelas</span>
+                </h3>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between bg-amber-100/80 border-2 border-amber-400 p-3 rounded-2xl">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl">🥇</span>
+                            <span class="font-bold text-sm text-amber-950">Riyadhy</span>
+                        </div>
+                        <span class="font-black text-amber-700 text-sm">520 XP</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-white/80 border-2 border-slate-300 p-3 rounded-2xl">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl">🥈</span>
+                            <span class="font-bold text-sm text-slate-950">Kamu ({{ Auth::user()->name }})</span>
+                        </div>
+                        <span class="font-black text-slate-700 text-sm">{{ $total_xp ?? 0 }} XP</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-amber-600/10 border-2 border-amber-700/30 p-3 rounded-2xl">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl">🥉</span>
+                            <span class="font-bold text-sm text-amber-900">Ojhy</span>
+                        </div>
+                        <span class="font-black text-amber-800 text-sm">310 XP</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- SISI KANAN: TOMBOL INTERAKTIF (ZONA PRETEST, GAME, DAN MODUL) --}}
+        <div class="lg:col-span-2 space-y-6">
+
+            <div class="text-center lg:text-left">
+                <h3 class="text-xl font-black text-blue-950 uppercase tracking-wide">🗺️ Pilih Zona Petualanganmu:</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <a href="{{ route('siswa.pretest') }}" class="btn-3d-blue group rounded-[36px] p-6 text-white text-center font-black text-xl border-4 border-white transition-all duration-150 relative overflow-hidden flex flex-col justify-between h-56">
+                    <div class="absolute -right-4 -top-4 w-16 h-16 bg-white/10 rounded-full pointer-events-none"></div>
+                    <div class="text-5xl transform group-hover:scale-125 transition-transform duration-200">📝</div>
+                    <div>
+                        <span class="block drop-shadow uppercase tracking-wide">Misi Uji Awal</span>
+                        <span class="block text-xs font-bold text-blue-100 normal-case mt-1 bg-black/10 rounded-full py-1 px-3 inline-block">Kerjakan Pretest Yuk! 🌟</span>
+                    </div>
+                </a>
+
+                <a href="{{ route('siswa.game.play', ['tipe' => 'literasi']) }}" class="btn-3d-orange group rounded-[36px] p-6 text-white text-center font-black text-xl border-4 border-white transition-all duration-150 relative overflow-hidden flex flex-col justify-between h-56">
+                    <div class="absolute -right-4 -top-4 w-16 h-16 bg-white/10 rounded-full pointer-events-none"></div>
+                    <div class="text-5xl transform group-hover:scale-125 group-hover:rotate-6 transition-transform duration-200">🎮</div>
+                    <div>
+                        <span class="block drop-shadow uppercase tracking-widest text-2xl">Mulai Main Game</span>
+                        <span class="block text-xs font-bold text-yellow-100 normal-case mt-1 bg-black/10 rounded-full py-1 px-3 inline-block">Misi Seru Berhadiah XP 💎</span>
+                    </div>
+                </a>
+
+            </div>
+
+            <div class="glass-panel rounded-[40px] p-6 shadow-2xl">
+                <h3 class="text-lg font-black text-blue-950 mb-4 flex items-center gap-2">
+                    📖 <span>Buku Panduan Penyelam (Modul Belajar)</span>
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    <a href="{{ route('siswa.modul.show', ['kategori' => 'literasi']) }}" class="group flex items-center gap-4 bg-white/80 hover:bg-white border-2 border-orange-200 hover:border-orange-500 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+                        <div class="text-4xl p-2 bg-orange-100 rounded-2xl transform group-hover:scale-110 transition-transform">🐙</div>
+                        <div>
+                            <h4 class="font-black text-blue-950 text-base">Modul Literasi</h4>
+                            <p class="text-xs text-gray-500 font-medium">Belajar membaca & memahami cerita laut.</p>
+                        </div>
                     </a>
-                </div>
-            </div>
 
-            <div class="absolute right-12 top-1/2 -translate-y-1/2 float-anim hidden lg:block opacity-30">
-                <div class="text-[12rem]">📖</div>
-            </div>
-        </section>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
-
-            <div class="lg:col-span-8 space-y-8">
-                <h2 class="text-2xl font-black text-edu-dark font-kids flex items-center gap-3">
-                    <span class="bg-edu-green/20 p-2 rounded-xl text-2xl">📊</span>
-                    Progres Belajarku
-                </h2>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="bg-white p-8 rounded-[2.5rem] shadow-xl border-b-8 border-edu-blue/20 card-interactive">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="text-4xl">📚</div>
-                            <span class="text-[10px] font-black bg-edu-blue/10 text-edu-blue px-3 py-1 rounded-full uppercase tracking-tighter">Literasi</span>
+                    <a href="{{ route('siswa.modul.show', ['kategori' => 'numerasi']) }}" class="group flex items-center gap-4 bg-white/80 hover:bg-white border-2 border-sky-200 hover:border-sky-500 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+                        <div class="text-4xl p-2 bg-sky-100 rounded-2xl transform group-hover:scale-110 transition-transform">🦈</div>
+                        <div>
+                            <h4 class="font-black text-blue-950 text-base">Modul Numerasi</h4>
+                            <p class="text-xs text-gray-500 font-medium">Berhitung angka-angka ajaib samudera.</p>
                         </div>
-                        <h3 class="text-xl font-black text-edu-dark mb-1">Membaca</h3>
-                        <p class="text-xs text-gray-400 font-bold mb-4 italic">Kuasai kata-kata baru!</p>
-                        <div class="w-full bg-gray-100 rounded-full h-3">
-                            <div class="bg-edu-blue h-3 rounded-full" style="width: 45%"></div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-8 rounded-[2.5rem] shadow-xl border-b-8 border-edu-orange/20 card-interactive">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="text-4xl">🧮</div>
-                            <span class="text-[10px] font-black bg-edu-orange/10 text-edu-orange px-3 py-1 rounded-full uppercase tracking-tighter">Numerasi</span>
-                        </div>
-                        <h3 class="text-xl font-black text-edu-dark mb-1">Berhitung</h3>
-                        <p class="text-xs text-gray-400 font-bold mb-4 italic">Jadi jagoan angka!</p>
-                        <div class="w-full bg-gray-100 rounded-full h-3">
-                            <div class="bg-edu-orange h-3 rounded-full" style="width: 30%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white p-8 rounded-[3rem] shadow-xl border-4 border-white flex flex-col md:flex-row items-center gap-8 card-interactive">
-                    <div class="w-32 h-32 bg-edu-green/10 rounded-[2rem] flex items-center justify-center text-6xl shadow-inner shrink-0">🕹️</div>
-                    <div class="flex-1 text-center md:text-left">
-                        <h3 class="text-2xl font-black text-edu-dark font-kids">Arena Game Edukasi</h3>
-                        <p class="text-gray-500 font-medium font-poppins">Bermain sambil belajar untuk dapatkan skor tambahan!</p>
-                    </div>
-                    <a href="{{ route('siswa.game.index') }}" class="px-10 py-5 bg-edu-green text-white rounded-[2rem] font-black shadow-lg shadow-green-500/30 hover:bg-edu-dark transition-all whitespace-nowrap uppercase tracking-widest text-sm">
-                        MAIN SEKARANG
                     </a>
-                </div>
-            </div>
 
-            <div class="lg:col-span-4 space-y-6">
-                <h2 class="text-2xl font-black text-edu-dark font-kids flex items-center gap-3">
-                    <span class="bg-edu-yellow/20 p-2 rounded-xl text-2xl">🏆</span>
-                    Juara Minggu Ini
-                </h2>
-
-                <div class="bg-white rounded-[2.5rem] p-6 shadow-xl border-2 border-white space-y-4">
-                    <div class="flex items-center gap-4 p-4 bg-yellow-50 rounded-3xl border border-yellow-100">
-                        <span class="text-2xl font-black text-edu-yellow">1</span>
-                        <img src="https://ui-avatars.com/api/?name=Akmal&background=FFD93D&color=fff" class="w-12 h-12 rounded-full border-2 border-white">
-                        <div class="flex-1">
-                            <p class="text-sm font-black text-edu-dark leading-tight">{{ Auth::user()->name }}</p>
-                            <p class="text-[10px] font-bold text-edu-orange tracking-widest uppercase">Rank: Petualang</p>
-                        </div>
-                    </div>
                 </div>
             </div>
 
         </div>
     </main>
 
-    <div class="fixed bottom-8 right-8 z-50">
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" title="Keluar" class="w-14 h-14 bg-white text-red-500 rounded-full shadow-2xl border-4 border-white flex items-center justify-center hover:bg-red-500 hover:text-white transition-all transform hover:rotate-12">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-            </button>
-        </form>
-    </div>
+    <script>
+        const bubblesContainer = document.getElementById('bubbles-container');
+        const bubbleCount = 18;
 
+        for (let i = 0; i < bubbleCount; i++) {
+            let bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+
+            let size = Math.random() * 25 + 8;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+
+            bubble.style.animationDuration = Math.random() * 6 + 5 + 's';
+            bubble.style.animationDelay = Math.random() * 5 + 's';
+
+            bubblesContainer.appendChild(bubble);
+        }
+    </script>
 </body>
+
 </html>
