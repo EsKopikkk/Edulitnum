@@ -111,7 +111,7 @@
     {{-- LAYOUT UTAMA DASHBOARD --}}
     <main class="relative z-10 max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        {{-- SISI KIRI: PROFIL, PETI NILAI & LEADERBOARD --}}
+        {{-- SISI KIRI: PROFIL & PETI NILAI --}}
         <div class="lg:col-span-1 space-y-6">
 
             <div class="glass-panel rounded-[40px] p-6 text-center shadow-2xl relative overflow-hidden">
@@ -147,62 +147,33 @@
                 </div>
             </div>
 
-            <div class="glass-panel rounded-[40px] p-6 shadow-2xl">
-                <h3 class="text-lg font-black text-blue-950 mb-4 flex items-center gap-2">
-                    🏆 <span>Top Penyelam Kelas</span>
-                </h3>
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between bg-amber-100/80 border-2 border-amber-400 p-3 rounded-2xl">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xl">🥇</span>
-                            <span class="font-bold text-sm text-amber-950">Riyadhy</span>
-                        </div>
-                        <span class="font-black text-amber-700 text-sm">520 XP</span>
-                    </div>
-                    <div class="flex items-center justify-between bg-white/80 border-2 border-slate-300 p-3 rounded-2xl">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xl">🥈</span>
-                            <span class="font-bold text-sm text-slate-950">Kamu ({{ Auth::user()->name }})</span>
-                        </div>
-                        <span class="font-black text-slate-700 text-sm">{{ $totalXp }} XP</span>
-                    </div>
-                    <div class="flex items-center justify-between bg-amber-600/10 border-2 border-amber-700/30 p-3 rounded-2xl">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xl">🥉</span>
-                            <span class="font-bold text-sm text-amber-900">Ojhy</span>
-                        </div>
-                        <span class="font-black text-amber-800 text-sm">310 XP</span>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
-        {{-- SISI KANAN: TOMBOL INTERAKTIF (ZONA PRETEST, GAME, DAN MODUL) --}}
+        {{-- SISI KANAN: TOMBOL INTERAKTIF (ZONA PETUALANGAN) --}}
         <div class="lg:col-span-2 space-y-6">
 
             <div class="text-center lg:text-left">
                 <h3 class="text-xl font-black text-blue-950 uppercase tracking-wide">🗺️ Pilih Zona Petualanganmu:</h3>
             </div>
 
+            {{-- GRID BARIS ATAS: PRETEST & TOMBOL GAME UTAMA --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                 @if(Auth::user()->is_pretest_done)
-                    <div class="bg-slate-200/60 border-2 border-slate-300 p-6 rounded-3xl opacity-70 flex flex-col items-center justify-center text-center shadow-inner">
+                    <div class="bg-slate-200/60 border-2 border-slate-300 p-6 rounded-3xl opacity-70 flex flex-col items-center justify-center text-center shadow-inner h-56">
                         <div class="text-5xl mb-2 filter grayscale">🔒</div>
                         <h3 class="font-black text-slate-500 font-kids text-lg">MISI AWAL SELESAI</h3>
                         <p class="text-xs text-slate-400 font-bold max-w-[200px] mt-1">Kamu sudah menyelami tantangan ini!</p>
                     </div>
                 @else
                     <a href="{{ route('siswa.pretest') }}"
-                       class="bg-white/90 border-2 border-white p-6 rounded-3xl flex flex-col items-center justify-center text-center shadow-md hover:scale-105 active:translate-y-1 transition-all group">
+                       class="bg-white/90 border-2 border-white p-6 rounded-3xl flex flex-col items-center justify-center text-center shadow-md hover:scale-105 active:translate-y-1 transition-all group h-56">
                         <div class="text-5xl mb-2 group-hover:animate-bounce">🤿</div>
                         <h3 class="font-black text-blue-950 font-kids text-lg">MISI AWAL (PRE-TEST)</h3>
                         <p class="text-xs text-blue-900/60 font-bold max-w-[200px] mt-1">Ayo mulai penyelaman pertamamu!</p>
                     </a>
                 @endif
 
-                <a href="{{ route('siswa.game.play', ['tipe' => 'literasi']) }}" class="btn-3d-orange group rounded-[36px] p-6 text-white text-center font-black text-xl border-4 border-white transition-all duration-150 relative overflow-hidden flex flex-col justify-between h-56">
+                <a href="{{ route('siswa.game.index', ['tipe' => 'literasi']) }}" class="btn-3d-orange group rounded-[36px] p-6 text-white text-center font-black text-xl border-4 border-white transition-all duration-150 relative overflow-hidden flex flex-col justify-between h-56">
                     <div class="absolute -right-4 -top-4 w-16 h-16 bg-white/10 rounded-full pointer-events-none"></div>
                     <div class="text-5xl transform group-hover:scale-125 group-hover:rotate-6 transition-transform duration-200">🎮</div>
                     <div>
@@ -210,33 +181,131 @@
                         <span class="block text-xs font-bold text-yellow-100 normal-case mt-1 bg-black/10 rounded-full py-1 px-3 inline-block">Misi Seru Berhadiah XP 💎</span>
                     </div>
                 </a>
-
             </div>
 
-            <div class="glass-panel rounded-[40px] p-6 shadow-2xl">
-                <h3 class="text-lg font-black text-blue-950 mb-4 flex items-center gap-2">
-                    📖 <span>Buku Panduan Penyelam (Modul Belajar)</span>
-                </h3>
+            {{-- GRID BARIS BAWAH: TOP PENYELAM & MODUL BELAJAR --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {{-- LEADERBOARD DENGAN LOGIKA DINAMIS --}}
+                <div class="glass-panel rounded-[40px] p-6 shadow-2xl h-full">
+                    <h3 class="text-lg font-black text-blue-950 mb-4 flex items-center gap-2">
+                        🏆 <span>Top Penyelam Kelas</span>
+                    </h3>
+                    <div class="space-y-2">
+                        @php
+                            $currentUserId = Auth::id();
 
-                    <a href="{{ route('siswa.modul.show', ['kategori' => 'literasi']) }}" class="group flex items-center gap-4 bg-white/80 hover:bg-white border-2 border-orange-200 hover:border-orange-500 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
-                        <div class="text-4xl p-2 bg-orange-100 rounded-2xl transform group-hover:scale-110 transition-transform">🐙</div>
-                        <div>
-                            <h4 class="font-black text-blue-950 text-base">Modul Literasi</h4>
-                            <p class="text-xs text-gray-500 font-medium">Belajar membaca & memahami cerita laut.</p>
-                        </div>
-                    </a>
+                            // 1. Cari tahu posisi peringkat user yang sedang login di dalam koleksi data
+                            $currentUserRank = null;
+                            foreach($topPenyelam as $index => $penyelam) {
+                                if($penyelam->id === $currentUserId) {
+                                    $currentUserRank = $index + 1; // Karena index dimulai dari 0
+                                    break;
+                                }
+                            }
 
-                    <a href="{{ route('siswa.modul.show', ['kategori' => 'numerasi']) }}" class="group flex items-center gap-4 bg-white/80 hover:bg-white border-2 border-sky-200 hover:border-sky-500 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
-                        <div class="text-4xl p-2 bg-sky-100 rounded-2xl transform group-hover:scale-110 transition-transform">🦈</div>
-                        <div>
-                            <h4 class="font-black text-blue-950 text-base">Modul Numerasi</h4>
-                            <p class="text-xs text-gray-500 font-medium">Berhitung angka-angka ajaib samudera.</p>
-                        </div>
-                    </a>
+                            // 2. Tentukan berapa banyak baris teratas yang akan di-looping langsung
+                            // Jika user ada di posisi ke-4, kita tampilkan 4 besar sekalian. Jika tidak, cukup 3 besar.
+                            $limitTampil = ($currentUserRank == 4) ? 4 : 3;
+                            $tampilkan3Besar = $topPenyelam->take($limitTampil);
+                        @endphp
 
+                        {{-- Loop Peringkat Utama (3 Besar atau 4 Besar) --}}
+                        @forelse($tampilkan3Besar as $index => $penyelam)
+                            @php
+                                $isCurrentUser = ($penyelam->id === $currentUserId);
+                                $rank = $index + 1;
+
+                                if ($rank == 1) {
+                                    $bgStyle = 'bg-amber-100/80 border-amber-400 text-amber-950';
+                                    $badge = '🥇';
+                                } elseif ($rank == 2) {
+                                    $bgStyle = 'bg-slate-100/90 border-slate-300 text-slate-950';
+                                    $badge = '🥈';
+                                } elseif ($rank == 3) {
+                                    $bgStyle = 'bg-amber-600/10 border-amber-700/30 text-amber-900';
+                                    $badge = '🥉';
+                                } else {
+                                    // Gaya khusus untuk peringkat ke-4 jika user berada di sana
+                                    $bgStyle = 'bg-white/60 border-white/40 text-blue-950';
+                                    $badge = '🤿';
+                                }
+                            @endphp
+
+                            <div class="flex items-center justify-between border-2 p-3 rounded-2xl transition-all {{ $bgStyle }} {{ $isCurrentUser ? 'ring-2 ring-orange-500 shadow-md font-extrabold' : '' }}">
+                                <div class="flex items-center gap-2 truncate">
+                                    <span class="text-xl select-none">{{ $badge }}</span>
+                                    <span class="font-bold text-sm truncate">
+                                        {{ $isCurrentUser ? 'Kamu (' . $penyelam->name . ')' : $penyelam->name }}
+                                    </span>
+                                </div>
+                                <span class="font-black text-sm shrink-0 pl-2">
+                                    {{ $penyelam->total_score_xp }} XP
+                                </span>
+                            </div>
+                        @empty
+                            <div class="text-center py-6 text-xs text-blue-900/60 font-bold">
+                                Belum ada petualang yang menyelam 🌊
+                            </div>
+                        @endforelse
+
+                        {{-- Logika Titik-Titik jika user berada di peringkat 5 ke atas --}}
+                        @if($currentUserRank && $currentUserRank > 4)
+                            @php
+                                // Ambil data nilai asli milik user yang sedang login untuk baris terbawah
+                                $userData = $topPenyelam->firstWhere('id', $currentUserId);
+                            @endphp
+
+                            {{-- Efek Pembatas Titik-Titik Selingan --}}
+                            <div class="text-center py-1 text-blue-950/60 font-black tracking-widest select-none">
+                                . . . . .
+                            </div>
+
+                            {{-- Baris Khusus Menampilkan Posisi User di Bawah --}}
+                            <div class="flex items-center justify-between border-2 p-3 rounded-2xl transition-all bg-blue-950/10 border-blue-950/20 text-blue-950 ring-2 ring-orange-500 shadow-md font-extrabold">
+                                <div class="flex items-center gap-2 truncate">
+                                    <span class="text-sm font-black text-blue-900 bg-white/80 px-2 py-0.5 rounded-lg border border-blue-950/20 shadow-sm">
+                                        #{{ $currentUserRank }}
+                                    </span>
+                                    <span class="font-bold text-sm truncate">
+                                        Kamu ({{ $userData->name }})
+                                    </span>
+                                </div>
+                                <span class="font-black text-sm shrink-0 pl-2">
+                                    {{ $userData->total_score_xp }} XP
+                                </span>
+                            </div>
+                        @endif
+                    </div>
                 </div>
+
+                {{-- BUKU PANDUAN MODUL BELAJAR --}}
+                <div class="glass-panel rounded-[40px] p-6 shadow-2xl h-full flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-black text-blue-950 mb-4 flex items-center gap-2">
+                            📖 <span>Buku Panduan Penyelam (Modul)</span>
+                        </h3>
+                    </div>
+
+                    <div class="space-y-3">
+                        <a href="{{ route('siswa.modul.show', ['kategori' => 'literasi']) }}" class="group flex items-center gap-4 bg-white/80 hover:bg-white border-2 border-orange-200 hover:border-orange-500 rounded-3xl p-3 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
+                            <div class="text-3xl p-2 bg-orange-100 rounded-2xl transform group-hover:scale-110 transition-transform">🐙</div>
+                            <div>
+                                <h4 class="font-black text-blue-950 text-sm">Modul Literasi</h4>
+                                <p class="text-[11px] text-gray-500 font-medium">Belajar membaca & memahami cerita laut.</p>
+                            </div>
+                        </a>
+
+                        <a href="{{ route('siswa.modul.show', ['kategori' => 'numerasi']) }}" class="group flex items-center gap-4 bg-white/80 hover:bg-white border-2 border-sky-200 hover:border-sky-500 rounded-3xl p-3 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
+                            <div class="text-3xl p-2 bg-sky-100 rounded-2xl transform group-hover:scale-110 transition-transform">🦈</div>
+                            <div>
+                                <h4 class="font-black text-blue-950 text-sm">Modul Numerasi</h4>
+                                <p class="text-[11px] text-gray-500 font-medium">Berhitung angka-angka ajaib samudera.</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
             </div>
 
         </div>
