@@ -12,9 +12,18 @@ class ModulController extends Controller
     {
         // Ambil semua modul dan kelas untuk ditampilkan
         $moduls = Modul::latest()->get();
-        $kelas = Kelas::all(); 
+        $kelas = Kelas::all();
 
         return view('guru.modul', compact('moduls', 'kelas'));
+    }
+
+    /**
+     * Menampilkan halaman modul literasi khusus siswa
+     */
+    public function siswaShow()
+    {
+        // Pastikan kamu punya file blade di resources/views/siswa/modul/literasi.blade.php
+        return view('siswa.modul.literasi');
     }
 
     public function store(Request $request)
@@ -40,7 +49,7 @@ class ModulController extends Controller
     {
         // Ambil data modul beserta kelasnya
         $modul = Modul::with('kelas')->findOrFail($id);
-        
+
         return view('guru.show_modul', compact('modul'));
     }
 }
