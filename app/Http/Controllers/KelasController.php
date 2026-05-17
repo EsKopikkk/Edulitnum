@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Kelas;
 use App\Models\User;
-use App\Models\Modul;
-use App\Models\ModulProgress;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
@@ -17,14 +15,6 @@ public function index()
     return view('admin.kelola_kelas', compact('kelas'));
 }
 
-public function manageModul($id)
-{
-    $kelas = Kelas::findOrFail($id);
-    $moduls = Modul::where('kelas_id', $kelas->id)->get();
-    $siswaDiKelas = $kelas->siswa()->with('user')->get();
-
-    return view('admin.kelola_modul', compact('kelas', 'moduls', 'siswaDiKelas'));
-}
 
     public function create()
     {
@@ -82,7 +72,7 @@ public function kelolaSiswa(Kelas $kelas)
 {
     $siswaDiKelas = $kelas->siswa()->with('user')->get();
     $semuaSiswa = User::where('role', 'siswa')->get();
-    return view('admin.kelola_siswa_kelas', compact('kelas', 'siswaDiKelas', 'semuaSiswa'));
+    return view('admin.kelola_siswa', compact('kelas', 'siswaDiKelas', 'semuaSiswa'));
 }
 
 // Tambah siswa ke kelas
@@ -117,58 +107,5 @@ public function hapusSiswa($kelas_id, $user_id)
     return back()->with('success', 'Siswa berhasil dikeluarkan dari kelas!');
 }
 
-// Tambah modul ke kelas
-public function tambahModul(Request $request, Kelas $kelas)
-{
-    $request->validate([
-        'judul' => 'required|string|max:255',
-        'deskripsi' => 'nullable|string',
-        'file_materi' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png|max:10240',
-    ]);
-
-    $data = $request->only(['judul', 'deskripsi']);
-    $data['kelas_id'] = $kelas->id;
-
-    if ($request->hasFile('file_materi')) {
-        $file = $request->file('file_materi');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->storeAs('materi', $filename, 'public');
-        $data['file_materi'] = 'materi/' . $filename;
-    }
-
-    Modul::create($data);
-
-    // Inisialisasi progress untuk semua siswa di kelas
-    $siswaDiKelas = $kelas->siswa()->pluck('user_id')->toArray();
-    $modul = Modul::where('kelas_id', $kelas->id)->latest()->first();
-
-    foreach ($siswaDiKelas as $user_id) {
-        ModulProgress::firstOrCreate(
-            ['user_id' => $user_id, 'modul_id' => $modul->id],
-            ['status' => 'not_started']
-        );
-    }
-
-    return back()->with('success', 'Modul berhasil ditambahkan!');
-}
-
-// Hapus modul dari kelas
-public function hapusModul($kelas_id, $modul_id)
-{
-    $modul = Modul::where('id', $modul_id)->where('kelas_id', $kelas_id)->firstOrFail();
-    ModulProgress::where('modul_id', $modul_id)->delete();
-    $modul->delete();
-
-    return back()->with('success', 'Modul berhasil dihapus!');
-}
-
-// Lihat progress siswa per modul
-public function lihatProgressModul(Kelas $kelas, Modul $modul)
-{
-    $siswaDiKelas = $kelas->siswa()->with('user')->get();
-    $progress = ModulProgress::where('modul_id', $modul->id)->get()->keyBy('user_id');
-
-    return view('admin.progress_modul', compact('kelas', 'modul', 'siswaDiKelas', 'progress'));
-}
 
 }

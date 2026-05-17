@@ -18,23 +18,45 @@ class ModulController extends Controller
     }
 
     /**
-     * Menampilkan halaman modul literasi khusus siswa
+     * Menampilkan halaman modul untuk siswa
      */
-    public function siswaShow()
+    public function siswaShow($kategori = null)
     {
-        // Pastikan kamu punya file blade di resources/views/siswa/modul/literasi.blade.php
-        return view('siswa.modul.literasi');
+        $user = auth()->user();
+
+        // Ambil kelas siswa
+        $kelasSiswa = $user->siswaDetail()->first()?->kelas;
+
+        if (!$kelasSiswa) {
+            return view('siswa.modul.belum-kelas');
+        }
+
+        // Ambil modul dari kelas siswa
+        $moduls = Modul::where('kelas_id', $kelasSiswa->id)->get();
+
+        return view('siswa.modul.literasi', compact('moduls', 'kelasSiswa'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'judul' => 'required',
-            'kelas_id' => 'required',
-            'deskripsi' => 'required',
+            'judul' => 'required|string|max:255',
+            'kelas_id' => 'required|exists:kelas,id',
+            'deskripsi' => 'required|string',
+            'file_materi' => 'nullable|file|mimes:pdf,doc,docx,ppt,pptx,jpg,jpeg,png|max:10240',
         ]);
 
-        Modul::create($request->all());
+        $data = $request->only(['judul', 'kelas_id', 'deskripsi']);
+
+        // Handle file upload
+        if ($request->hasFile('file_materi')) {
+            $file = $request->file('file_materi');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('materi', $filename, 'public');
+            $data['file_materi'] = 'materi/' . $filename;
+        }
+
+        Modul::create($data);
 
         return redirect()->back()->with('success', 'Modul materi baru berhasil dibuat! 📚');
     }

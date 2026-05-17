@@ -23,8 +23,4 @@ class Modul extends Model
         return $this->hasMany(Soal::class);
     }
 
-    public function progress()
-    {
-        return $this->hasMany(ModulProgress::class);
-    }
 }

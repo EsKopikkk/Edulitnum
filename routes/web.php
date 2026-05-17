@@ -47,10 +47,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     // Kelola Kelas & Modul
     Route::resource('kelas', KelasController::class)->parameters(['kelas' => 'kelas']);
-    Route::get('/kelas/{id}/modul', [KelasController::class, 'manageModul'])->name('admin.kelas.modul');
-    Route::post('/kelas/{kelas}/modul', [KelasController::class, 'tambahModul'])->name('admin.kelas.modul.tambah');
-    Route::delete('/kelas/{kelas_id}/modul/{modul_id}', [KelasController::class, 'hapusModul'])->name('admin.kelas.modul.hapus');
-    Route::get('/kelas/{kelas}/modul/{modul}/progress', [KelasController::class, 'lihatProgressModul'])->name('admin.kelas.modul.progress');
 
     // Kelola Siswa di dalam Kelas
     Route::get('/kelas/{kelas}/siswa', [KelasController::class, 'kelolaSiswa'])->name('admin.kelas.siswa');

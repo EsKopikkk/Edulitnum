@@ -124,7 +124,7 @@
                     Buat Modul Baru
                 </h3>
 
-                <form action="{{ route('modul.store') }}" method="POST" class="space-y-5 relative z-10">
+                <form action="{{ route('modul.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5 relative z-10">
                     @csrf
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Judul Modul</label>
@@ -153,6 +153,12 @@
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">Deskripsi/Isi Singkat</label>
                         <textarea name="deskripsi" rows="3" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 font-medium mt-1 focus:border-edu-orange focus:outline-none transition-colors resize-none" placeholder="Materi tentang..." required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">📎 File Materi (PDF, Doc, PPT, Gambar)</label>
+                        <input type="file" name="file_materi" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 font-medium mt-1 focus:border-edu-orange focus:outline-none transition-colors cursor-pointer" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png">
+                        <p class="text-xs text-gray-400 mt-2">Ukuran max: 10MB (Opsional)</p>
                     </div>
 
                     <button type="submit" class="w-full bg-edu-orange text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest mt-4 hover:-translate-y-1 hover:shadow-lg hover:shadow-edu-orange/30 transition-all flex items-center justify-center gap-2">
