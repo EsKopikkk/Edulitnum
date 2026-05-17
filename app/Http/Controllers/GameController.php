@@ -57,18 +57,18 @@ class GameController extends Controller
             // 1. Validasi input dari Fetch API game
             $request->validate([
                 'tipe'       => 'required|in:literasi,numerasi',
-                'skor'       => 'required|integer|min:0|max:100',
+                'skor'       => 'required|integer|min:0',
                 'waktu_sisa' => 'required|integer'
             ]);
-    
+
             $user = Auth::user();
             if (!$user) {
                 return response()->json(['success' => false, 'message' => 'Sesi login habis!'], 401);
             }
-    
+
             // 2. Tentukan kolom mana yang akan diisi secara dinamis berdasarkan tipe game
             $kolomSkor = $request->tipe === 'literasi' ? 'skor_game_literasi' : 'skor_game_numerasi';
-    
+
             // 3. Update atau Create data berdasarkan user_id siswa yang sedang aktif
             $progress = HasilBelajar::updateOrCreate(
                 [
@@ -79,13 +79,13 @@ class GameController extends Controller
                     'updated_at' => now()
                 ]
             );
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'Skor petualangan game berhasil disimpan ke progres belajar!',
                 'data'    => $progress
             ], 200);
-    
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
