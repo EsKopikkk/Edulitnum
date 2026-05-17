@@ -8,8 +8,6 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\SoalImport;
 
-
-
 class SoalController extends Controller
 {
     // Menampilkan Bank Soal
@@ -27,32 +25,46 @@ class SoalController extends Controller
     }
 
     // Menyimpan Soal Baru ke Database
-public function store(Request $request)
-{
-    $request->validate([
-        'modul_id'      => 'required',
-        'fase'          => 'required',
-        'kategori'      => 'required',
-        'pertanyaan'    => 'required',
-        'pilihan_a'     => 'required',
-        'pilihan_b'     => 'required',
-        'pilihan_c'     => 'required',
-        'pilihan_d'     => 'required',
-        'kunci_jawaban' => 'required',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'modul_id'      => 'required',
+            'fase'          => 'required',
+            'kategori'      => 'required',
+            'pertanyaan'    => 'required',
+            'pilihan_a'     => 'required',
+            'pilihan_b'     => 'required',
+            'pilihan_c'     => 'required',
+            'pilihan_d'     => 'required',
+            'kunci_jawaban' => 'required',
+        ]);
 
-    // 1. Ambil semua data dari form
-    $data = $request->all();
+        // 1. Ambil semua data dari form
+        $data = $request->all();
 
-    // 2. PAKSA JADI HURUF KECIL DI SINI (Biar tidak akan pernah eror lagi)
-    $data['kategori'] = strtolower($request->kategori);
-    $data['fase']     = strtolower($request->fase);
+        // 2. PAKSA JADI HURUF KECIL & PASANG PENGAMAN TIPE (FIX FIELD TIPE ERROR)
+        $data['kategori'] = strtolower($request->kategori);
+        $data['fase']     = strtolower($request->fase);
+        $data['tipe']     = strtolower($request->tipe ?? 'pilihan_ganda'); 
 
-    // 3. Simpan ke database
-    Soal::create($data);
+        // 3. Simpan ke database
+        Soal::create($data);
 
-    return redirect()->back()->with('success', 'Soal berhasil ditambahkan ke modul dan Bank Soal! 🚀✨');
-}
+        return redirect()->back()->with('success', 'Soal berhasil ditambahkan ke modul dan Bank Soal! 🚀✨');
+    }
+
+    // --- PENGAMAN ROUTE REFRESH / COLLISION (ANTI-CRASH) ---
+    // Jika user me-refresh halaman setelah eror import atau mengakses GET /soal/import, 
+    // alihkan langsung kembali ke halaman bank soal agar tidak melahirkan eror 'method undefined'.
+    public function show($id)
+    {
+        if ($id === 'import') {
+            return redirect()->route('soal.index')->with('error', 'Silakan gunakan tombol import yang tersedia.');
+        }
+        
+        $soal = Soal::findOrFail($id);
+        return view('guru.detail_soal', compact('soal'));
+    }
 
     // Menampilkan Form Edit Soal
     public function edit($id)
@@ -78,7 +90,13 @@ public function store(Request $request)
         ]);
 
         $soal = Soal::findOrFail($id);
-        $soal->update($request->all());
+        
+        $data = $request->all();
+        $data['kategori'] = strtolower($request->kategori);
+        $data['fase']     = strtolower($request->fase);
+        $data['tipe']     = strtolower($request->tipe ?? $soal->tipe ?? 'pilihan_ganda');
+
+        $soal->update($data);
 
         return redirect()->route('soal.index')->with('success', 'Data soal berhasil diubah! ✏️');
     }
@@ -114,19 +132,19 @@ public function store(Request $request)
         return redirect()->back()->with('success', 'Ratusan soal berhasil mendarat! 🚀');
     }
 
-  public function destroyAll($modul_id)
-{
-    // Menghapus seluruh soal yang terikat dengan id modul ini
-    Soal::where('modul_id', $modul_id)->delete();
+    public function destroyAll($modul_id)
+    {
+        // Menghapus seluruh soal yang terikat dengan id modul ini
+        Soal::where('modul_id', $modul_id)->delete();
 
-    return redirect()->back()->with('success', 'Semua soal di modul ini berhasil dibersihkan! 🗑️💥');
-}
+        return redirect()->back()->with('success', 'Semua soal di modul ini berhasil dibersihkan! 🗑️💥');
+    }
 
-public function deleteAllGlobal()
-{
-    // Menghapus seluruh data dari tabel soal secara total
-    Soal::query()->delete();
+    public function deleteAllGlobal()
+    {
+        // Menghapus seluruh data dari tabel soal secara total
+        Soal::query()->delete();
 
-    return redirect()->back()->with('success', 'Semua soal di Bank Soal berhasil dihapus total! 🗑️💥');
-}
+        return redirect()->back()->with('success', 'Semua soal di Bank Soal berhasil dihapus total! 🗑️💥');
+    }
 }

@@ -7,7 +7,7 @@
     <title>Markas Penyelam | Edulitnum</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght=800;900&family=Poppins:wght=500;700;800&display=swap" rel="stylesheet">
 
     <style>
         body {
@@ -186,96 +186,13 @@
             {{-- GRID BARIS BAWAH: TOP PENYELAM & MODUL BELAJAR --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 
-                {{-- LEADERBOARD DENGAN LOGIKA DINAMIS --}}
+                {{-- KOTAK LEADERBOARD LIVE REAL-TIME --}}
                 <div class="glass-panel rounded-[40px] p-6 shadow-2xl h-full">
                     <h3 class="text-lg font-black text-blue-950 mb-4 flex items-center gap-2">
                         🏆 <span>Top Penyelam Kelas</span>
                     </h3>
-                    <div class="space-y-2">
-                        @php
-                            $currentUserId = Auth::id();
-
-                            // 1. Cari tahu posisi peringkat user yang sedang login di dalam koleksi data
-                            $currentUserRank = null;
-                            foreach($topPenyelam as $index => $penyelam) {
-                                if($penyelam->id === $currentUserId) {
-                                    $currentUserRank = $index + 1; // Karena index dimulai dari 0
-                                    break;
-                                }
-                            }
-
-                            // 2. Tentukan berapa banyak baris teratas yang akan di-looping langsung
-                            // Jika user ada di posisi ke-4, kita tampilkan 4 besar sekalian. Jika tidak, cukup 3 besar.
-                            $limitTampil = ($currentUserRank == 4) ? 4 : 3;
-                            $tampilkan3Besar = $topPenyelam->take($limitTampil);
-                        @endphp
-
-                        {{-- Loop Peringkat Utama (3 Besar atau 4 Besar) --}}
-                        @forelse($tampilkan3Besar as $index => $penyelam)
-                            @php
-                                $isCurrentUser = ($penyelam->id === $currentUserId);
-                                $rank = $index + 1;
-
-                                if ($rank == 1) {
-                                    $bgStyle = 'bg-amber-100/80 border-amber-400 text-amber-950';
-                                    $badge = '🥇';
-                                } elseif ($rank == 2) {
-                                    $bgStyle = 'bg-slate-100/90 border-slate-300 text-slate-950';
-                                    $badge = '🥈';
-                                } elseif ($rank == 3) {
-                                    $bgStyle = 'bg-amber-600/10 border-amber-700/30 text-amber-900';
-                                    $badge = '🥉';
-                                } else {
-                                    // Gaya khusus untuk peringkat ke-4 jika user berada di sana
-                                    $bgStyle = 'bg-white/60 border-white/40 text-blue-950';
-                                    $badge = '🤿';
-                                }
-                            @endphp
-
-                            <div class="flex items-center justify-between border-2 p-3 rounded-2xl transition-all {{ $bgStyle }} {{ $isCurrentUser ? 'ring-2 ring-orange-500 shadow-md font-extrabold' : '' }}">
-                                <div class="flex items-center gap-2 truncate">
-                                    <span class="text-xl select-none">{{ $badge }}</span>
-                                    <span class="font-bold text-sm truncate">
-                                        {{ $isCurrentUser ? 'Kamu (' . $penyelam->name . ')' : $penyelam->name }}
-                                    </span>
-                                </div>
-                                <span class="font-black text-sm shrink-0 pl-2">
-                                    {{ $penyelam->total_score_xp }} XP
-                                </span>
-                            </div>
-                        @empty
-                            <div class="text-center py-6 text-xs text-blue-900/60 font-bold">
-                                Belum ada petualang yang menyelam 🌊
-                            </div>
-                        @endforelse
-
-                        {{-- Logika Titik-Titik jika user berada di peringkat 5 ke atas --}}
-                        @if($currentUserRank && $currentUserRank > 4)
-                            @php
-                                // Ambil data nilai asli milik user yang sedang login untuk baris terbawah
-                                $userData = $topPenyelam->firstWhere('id', $currentUserId);
-                            @endphp
-
-                            {{-- Efek Pembatas Titik-Titik Selingan --}}
-                            <div class="text-center py-1 text-blue-950/60 font-black tracking-widest select-none">
-                                . . . . .
-                            </div>
-
-                            {{-- Baris Khusus Menampilkan Posisi User di Bawah --}}
-                            <div class="flex items-center justify-between border-2 p-3 rounded-2xl transition-all bg-blue-950/10 border-blue-950/20 text-blue-950 ring-2 ring-orange-500 shadow-md font-extrabold">
-                                <div class="flex items-center gap-2 truncate">
-                                    <span class="text-sm font-black text-blue-900 bg-white/80 px-2 py-0.5 rounded-lg border border-blue-950/20 shadow-sm">
-                                        #{{ $currentUserRank }}
-                                    </span>
-                                    <span class="font-bold text-sm truncate">
-                                        Kamu ({{ $userData->name }})
-                                    </span>
-                                </div>
-                                <span class="font-black text-sm shrink-0 pl-2">
-                                    {{ $userData->total_score_xp }} XP
-                                </span>
-                            </div>
-                        @endif
+                    <div id="live-leaderboard-siswa">
+                        @include('siswa.partials.leaderboard_content')
                     </div>
                 </div>
 
@@ -329,6 +246,19 @@
 
             bubblesContainer.appendChild(bubble);
         }
+    </script>
+
+    <script>
+        function refreshLeaderboardSiswa() {
+            fetch("{{ route('siswa.leaderboard.render') }}")
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('live-leaderboard-siswa').innerHTML = html;
+                })
+                .catch(error => console.log('Koneksi terputus:', error));
+        }
+        // Ambil data terbaru setiap 3 detik
+        setInterval(refreshLeaderboardSiswa, 3000);
     </script>
 </body>
 

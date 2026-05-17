@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,17 +26,32 @@ class DatabaseSeeder extends Seeder
 
         // --- 2. SEED DATA GURU ---
         $gurus = ['Pak Budi', 'Ibu Sarah', 'Pak Andi'];
+        $firstGuruId = null;
+
         foreach ($gurus as $namaGuru) {
             $email = strtolower(str_replace(' ', '', $namaGuru)) . '@edulitnum.test';
-            User::create([
+            $guru = User::create([
                 'name' => $namaGuru,
                 'email' => $email,
                 'password' => $password,
                 'role' => 'guru',
             ]);
+
+            // Ambil ID dari guru pertama (Pak Budi) untuk dijadikan Wali Kelas default di seeder kelas
+            if (!$firstGuruId) {
+                $firstGuruId = $guru->id;
+            }
         }
 
-        // --- 3. SEED DATA SISWA (Format NIS Berkode Kelas) ---
+        // --- 3. SEED DATA KELAS (Ditaruh setelah Guru karena wajib mengisi 'guru_id') ---
+        DB::table('kelas')->insertOrIgnore([
+            ['id' => 1, 'nama_kelas' => '3-A', 'guru_id' => $firstGuruId, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 2, 'nama_kelas' => '3-B', 'guru_id' => $firstGuruId, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 3, 'nama_kelas' => '4-A', 'guru_id' => $firstGuruId, 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 4, 'nama_kelas' => '4-B', 'guru_id' => $firstGuruId, 'created_at' => now(), 'updated_at' => now()],
+        ]);
+
+        // --- 4. SEED DATA SISWA (Format NIS Berkode Kelas) ---
         $siswas = [
             ['name' => 'Akmal', 'kelas' => 'A', 'number' => '001'], // NIS: EDA001
             ['name' => 'Ojhy',  'kelas' => 'A', 'number' => '002'], // NIS: EDA002
@@ -52,16 +70,10 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // --- 4. PANGGIL SOAL SEEDER ---
+        // --- 5. PANGGIL SOAL SEEDER ---
         $this->call([
             UserSeeder::class,
             SoalSeeder::class,
         ]);
     }
 }
-
-
-/**
- * Panggil UserSeeder dan SoalSeeder
- * (User sudah di-handle di UserSeeder, jadi tidak perlu bikin manual di sini)
- */

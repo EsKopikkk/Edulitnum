@@ -38,7 +38,7 @@
         <header class="w-full bg-white/70 backdrop-blur-md rounded-[2.5rem] p-8 flex justify-between items-center border border-white shadow-xl">
             <div>
                 <h1 class="text-3xl font-black text-edu-dark">Modul Kelas 📚✨</h1>
-                <p class="text-gray-400 font-medium mt-1">Halo Guru Hebat! Ayo buat materi dan tantangan numerasi seru! 🚀</p>
+                <p class="text-gray-400 font-medium mt-1">Halo Guru Hebat! Ayo buat materi dan tantangan belajar yang seru! 🚀</p>
             </div>
             <a href="/guru/dashboard" class="bg-edu-orange text-white px-6 py-3 rounded-2xl font-bold shadow-lg hover:scale-105 transition">
                 🏠 Dashboard
@@ -46,7 +46,7 @@
         </header>
 
         @if(session('success'))
-            <div class="bg-green-100 border-l-8 border-green-500 text-green-700 p-5 rounded-3xl font-bold animate-bounce">
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-5 rounded-3xl font-bold">
                 🎉 {{ session('success') }}
             </div>
         @endif
@@ -59,7 +59,7 @@
                     Buat Modul Ajar
                 </h3>
 
-                <form action="{{ route('modul.store') }}" method="POST" enctype="multipart/form-data" enctype="multipart/form-data" class="space-y-5">
+                <form action="{{ route('modul.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                     @csrf
                     <div>
                         <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-2">Judul Materi ✏️</label>
@@ -74,13 +74,15 @@
                             @endforeach
                         </select>
                     </div>
-<div class="mt-4">
-    <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-2">Jenis Modul 🎯</label>
-    <select name="jenis_modul" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 mt-1 focus:border-edu-orange outline-none font-medium" required>
-        <option value="numerasi">🔢 Modul Numerasi</option>
-        <option value="literasi">📖 Modul Literasi</option>
-    </select>
-</div>
+
+                    <div>
+                        <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-2">Jenis Modul 🎯</label>
+                        <select name="jenis_modul" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 mt-1 focus:border-edu-orange outline-none font-medium" required>
+                            <option value="numerasi">🔢 Modul Numerasi</option>
+                            <option value="literasi">📖 Modul Literasi</option>
+                        </select>
+                    </div>
+
                     <div>
                         <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-2">Deskripsi Singkat (Pajangan Depan) 💡</label>
                         <textarea name="deskripsi" rows="2" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 mt-1 focus:border-edu-orange outline-none resize-none font-medium" placeholder="Isi ringkasan menarik untuk anak-anak..." required></textarea>
@@ -92,8 +94,8 @@
                     </div>
 
                     <div>
-                        <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-2">Tantangan Soal Numerasi 🔢</label>
-                        <textarea name="soal_numerik" rows="3" class="w-full bg-blue-50 border-2 border-edu-blue/20 rounded-2xl p-4 mt-1 focus:border-edu-blue outline-none font-medium text-gray-700" placeholder="Cth: Jika 1 roket berisi 4 astronot, berapa total astronot jika ada 3 roket?"></textarea>
+                        <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-2">Tantangan Soal Modul 🔢 / 📖</label>
+                        <textarea name="soal_numerik" rows="3" class="w-full bg-blue-50 border-2 border-edu-blue/20 rounded-2xl p-4 mt-1 focus:border-edu-blue outline-none font-medium text-gray-700" placeholder="Masukkan soal esai tantangan bebas di sini..."></textarea>
                     </div>
 
                     <div>
@@ -120,7 +122,7 @@
 
             <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                 @forelse($moduls as $m)
-                <div class="kiddy-card bg-white rounded-[3.5rem] border border-white shadow-xl overflow-hidden flex flex-col border-edu-blue">
+                <div class="kiddy-card bg-white rounded-[3.5rem] border border-white shadow-xl overflow-hidden flex flex-col {{ $m->jenis_modul == 'literasi' ? 'border-purple-400' : 'border-edu-blue' }}">
                     
                     <div class="h-48 bg-gray-100 relative">
                         @if($m->gambar)
@@ -128,9 +130,12 @@
                         @else
                             <div class="w-full h-full flex items-center justify-center text-6xl bg-orange-50">🚀</div>
                         @endif
-                        <div class="absolute top-4 left-4">
-                            <span class="bg-white/90 backdrop-blur-md text-edu-blue text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-wider shadow-sm">
+                        <div class="absolute top-4 left-4 flex gap-2">
+                            <span class="bg-white/90 backdrop-blur-md text-edu-dark text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-wider shadow-sm">
                                 🏫 Kelas {{ $m->kelas->nama_kelas ?? $m->kelas_id }}
+                            </span>
+                            <span class="text-[10px] font-black px-4 py-2 rounded-full uppercase tracking-wider shadow-sm text-white {{ $m->jenis_modul == 'literasi' ? 'bg-purple-500' : 'bg-edu-orange' }}">
+                                {{ $m->jenis_modul == 'literasi' ? '📖 Literasi' : '🔢 Numerasi' }}
                             </span>
                         </div>
                     </div>
@@ -140,19 +145,25 @@
                         <p class="text-sm text-gray-400 font-medium line-clamp-2 italic mb-6">"{{ $m->deskripsi }}"</p>
                         
                         @if($m->soal_numerik)
-                            <div class="mb-4 flex items-center gap-2 text-xs font-bold text-edu-blue bg-blue-50 px-4 py-2 rounded-xl w-fit">
-                                <span>🔢</span> Ada Tantangan Numerasi
+                            <div class="mb-4 flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-xl w-fit {{ $m->jenis_modul == 'literasi' ? 'text-purple-600 bg-purple-50' : 'text-edu-blue bg-blue-50' }}">
+                                <span>{{ $m->jenis_modul == 'literasi' ? '📖' : '🔢' }}</span> Ada Tantangan {{ ucfirst($m->jenis_modul ?? 'Numerasi') }}
                             </div>
                         @endif
 
                         <div class="flex gap-3 mt-2">
-                            <a href="{{ route('modul.show', $m->id) }}" class="flex-1 bg-edu-green text-white py-4 rounded-2xl text-xs font-black uppercase text-center hover:bg-green-500 shadow-md transition-all">
+                            <a href="{{ route('modul.show', $m->id) }}" class="flex-1 bg-edu-green text-white py-4 rounded-2xl text-xs font-black uppercase text-center hover:bg-green-500 shadow-md transition-all flex items-center justify-center">
                                 📖 Buka Materi Yuk!
+                            </a>
+                            
+                            <a href="{{ route('modul.edit', $m->id) }}" class="bg-blue-50 text-edu-blue w-12 h-12 flex items-center justify-center rounded-2xl border border-blue-100 hover:bg-edu-blue hover:text-white transition-all shadow-sm" title="Edit Modul">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
                             </a>
                             
                             <form action="{{ route('modul.destroy', $m->id) }}" method="POST" onsubmit="return confirm('Hapus materi ini? 😢');">
                                 @csrf @method('DELETE')
-                                <button class="bg-red-50 text-red-400 w-12 h-12 flex items-center justify-center rounded-2xl border border-red-100 hover:bg-red-500 hover:text-white transition-all" title="Hapus Modul">
+                                <button class="bg-red-50 text-red-400 w-12 h-12 flex items-center justify-center rounded-2xl border border-red-100 hover:bg-red-500 hover:text-white transition-all shadow-sm" title="Hapus Modul">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
                             </form>

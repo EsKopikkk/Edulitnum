@@ -46,7 +46,12 @@ class UjianController extends Controller
             foreach ($semuaSoal as $soal) {
                 $totalSkorMaksimal += $bobotDasarSoal;
 
-                if (isset($jawabanSiswa[$soal->id]) && $jawabanSiswa[$soal->id] == $soal->kunci_jawaban) {
+                // --- PROSES NORMALISASI JAWABAN (FIX SKOR 0) ---
+                // Mengubah semua input ke huruf besar dan menghapus spasi gaib agar pencocokan 100% akurat
+                $jawabanUser = isset($jawabanSiswa[$soal->id]) ? strtoupper(trim($jawabanSiswa[$soal->id])) : '';
+                $kunciBenar   = strtoupper(trim($soal->kunci_jawaban));
+
+                if ($jawabanUser !== '' && $jawabanUser === $kunciBenar) {
                     $benar++;
 
                     $sisaWaktu = isset($sisaWaktuSiswa[$soal->id]) ? intval($sisaWaktuSiswa[$soal->id]) : 30;

@@ -72,8 +72,10 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->group(function () {
     // Resource Soal & Modul
     Route::resource('soal', SoalController::class);
     Route::resource('modul', ModulController::class);
-});
 
+    // FIX REAL-TIME: Cukup hapus /guru di depan URL-nya agar tidak ganda saat di-render
+    Route::get('/leaderboard/render', [App\Http\Controllers\LeaderboardController::class, 'renderGuru'])->name('guru.leaderboard.render');
+});
 
 // ==========================================
 // 5. RUTE KHUSUS SISWA (Sudah Dilindungi Satpam)
@@ -89,7 +91,8 @@ Route::middleware(['auth', 'role:siswa', 'force.pretest'])->prefix('siswa')->nam
     Route::get('/game/play/{tipe}', [GameController::class, 'play'])->name('game.play');
     Route::get('/modul/{kategori}', [ModulController::class, 'siswaShow'])->name('modul.show');
     Route::post('/game/simpan-skor', [GameController::class, 'simpanSkor'])->name('game.simpanSkor');
-});
+// Baris 93 cukup ditulis leaderboard.render saja karena otomatis digabung dengan awalan grup siswa.
+Route::get('/siswa/leaderboard/render', [\App\Http\Controllers\LeaderboardController::class, 'renderSiswa'])->name('leaderboard.render');});
 
 // ==========================================
 // 6. AUTH ROUTES

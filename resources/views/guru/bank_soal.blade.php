@@ -6,7 +6,7 @@
     <title>Bank Soal | Edulitnum</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght=700;800&family=Poppins:wght=300;400;500;600&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -114,6 +114,12 @@
             </div>
         @endif
 
+        @if(session('error'))
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-2xl font-bold flex items-center gap-3 shadow-sm">
+                <span class="text-xl">⚠️</span> {{ session('error') }}
+            </div>
+        @endif
+
         <div class="bg-white rounded-[2.5rem] p-6 lg:p-8 border border-white shadow-xl shadow-black/5 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
             <div class="absolute -right-10 -top-10 w-40 h-40 bg-edu-orange/5 rounded-full blur-2xl pointer-events-none"></div>
 
@@ -124,7 +130,7 @@
                 </h3>
                 <p class="text-sm text-gray-400 font-medium mt-2">Punya puluhan soal di Excel? Upload langsung di sini biar cepat!</p>
                 
-                <a href="{{ asset('template_soal.xlsx') }}" download class="inline-flex items-center gap-2 mt-4 text-xs font-bold text-edu-blue bg-edu-blue/10 px-4 py-2 rounded-lg hover:bg-edu-blue hover:text-white transition-colors">
+                <a href="{{ asset('template_soal_literasi_samudera.xlsx') }}" download class="inline-flex items-center gap-2 mt-4 text-xs font-bold text-edu-blue bg-edu-blue/10 px-4 py-2 rounded-lg hover:bg-edu-blue hover:text-white transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     Download Template Excel
                 </a>
@@ -179,7 +185,7 @@
                             <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest">Pertanyaan</th>
                             <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest">Modul</th> 
                             <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Kategori</th>
-                            <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Fase</th>
+                            <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Tipe</th> <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Fase</th>
                             <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Kunci</th>
                             <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center w-32">Aksi</th>
                         </tr>
@@ -200,24 +206,29 @@
                                 </span>
                             </td>
                             <td class="p-4 text-center">
+                                <span class="px-3 py-1 rounded-lg text-xs font-bold {{ strtolower($s->tipe ?? 'pilihan_ganda') == 'esai' ? 'bg-purple-50 text-purple-600' : 'bg-teal-50 text-teal-600' }}">
+                                    {{ strtolower($s->tipe ?? 'pilihan_ganda') == 'esai' ? '✍️ Esai' : '📝 PG' }}
+                                </span>
+                            </td>
+                            <td class="p-4 text-center">
                                 <span class="px-3 py-1 rounded-lg text-xs font-bold bg-gray-100 text-gray-500">
                                     Fase {{ strtoupper($s->fase) }}
                                 </span>
                             </td>
                             <td class="p-4 text-center">
-                                <div class="w-8 h-8 mx-auto rounded-xl bg-green-50 flex items-center justify-center font-black text-green-500 border border-green-100">
-                                    {{ $s->kunci_jawaban }}
+                                <div class="w-8 h-8 mx-auto rounded-xl bg-green-50 flex items-center justify-center font-black text-green-500 border border-green-100 truncate max-w-[100px] text-xs px-1">
+                                    {{ \Illuminate\Support\Str::limit($s->kunci_jawaban, 5) }}
                                 </div>
                             </td>
                             <td class="p-4 text-center">
-                                <div class="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <a href="{{ route('soal.edit', $s->id) }}" class="p-2 bg-edu-blue/10 text-edu-blue rounded-xl hover:bg-edu-blue hover:text-white transition-colors" title="Edit">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="{{ route('soal.edit', $s->id) }}" class="p-2 bg-edu-blue/10 text-edu-blue rounded-xl hover:bg-edu-blue hover:text-white transition-colors border border-edu-blue/20 shadow-sm" title="Edit">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                     </a>
                                     <form action="{{ route('soal.destroy', $s->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus soal ini?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="p-2 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-colors" title="Hapus">
+                                        <button type="submit" class="p-2 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-colors border border-red-100 shadow-sm" title="Hapus">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                         </button>
                                     </form>
@@ -226,7 +237,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="p-12 text-center text-gray-400">
+                            <td colspan="8" class="p-12 text-center text-gray-400">
                                 <div class="flex flex-col items-center justify-center gap-4">
                                     <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center">
                                         <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
