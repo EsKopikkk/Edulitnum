@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class UjianController extends Controller
 {
-    /**
-     * Menampilkan daftar soal pre-test
-     */
+    // Menampilkan daftar soal pre-test
     public function index()
     {
         $daftarSoal = Soal::where('status_validasi', true)
@@ -28,48 +26,72 @@ class UjianController extends Controller
         return view('siswa.pretest', compact('daftarSoal'));
     }
 
-    /**
-     * Menyimpan jawaban pre-test (Form Submit)
-     */
+    // Menyimpan jawaban pre-test dan kalkulasi skor berdasarkan kecepatan waktu
     public function simpanJawaban(Request $request)
     {
         $jawabanSiswa = $request->input('jawaban', []);
-        $benar = 0;
+        $sisaWaktuSiswa = $request->input('sisa_waktu', []);
 
         $idSoal = array_keys($jawabanSiswa);
         $semuaSoal = Soal::whereIn('id', $idSoal)->get();
         $totalSoal = $semuaSoal->count();
 
+        $totalSkorMaksimal = 0;
+        $skorDidapat = 0;
+        $benar = 0;
+
         if ($totalSoal > 0) {
+            $bobotDasarSoal = 100;
+
             foreach ($semuaSoal as $soal) {
+                $totalSkorMaksimal += $bobotDasarSoal;
+
                 if (isset($jawabanSiswa[$soal->id]) && $jawabanSiswa[$soal->id] == $soal->kunci_jawaban) {
                     $benar++;
+
+                    $sisaWaktu = isset($sisaWaktuSiswa[$soal->id]) ? intval($sisaWaktuSiswa[$soal->id]) : 30;
+                    $waktuMenjawab = 30 - $sisaWaktu;
+
+                    // Logika Bonus Waktu: 5 detik pertama full, setelahnya penyusutan linear konstan
+                    if ($waktuMenjawab <= 5) {
+                        $poinSoal = $bobotDasarSoal;
+                    } else {
+                        $faktorPengurang = 1 - (($waktuMenjawab - 5) * 0.005);
+                        $poinSoal = $bobotDasarSoal * max($faktorPengurang, 0.85);
+                    }
+
+                    $skorDidapat += $poinSoal;
                 }
             }
-            $skor = ($benar / $totalSoal) * 100;
+
+            $skor = ($skorDidapat / $totalSkorMaksimal) * 100;
         } else {
             $skor = 0;
         }
 
-        // Simpan atau Update hasil ke database
+        // Menyimpan atau memperbarui akumulasi hasil belajar siswa
         HasilBelajar::updateOrCreate(
             ['user_id' => Auth::id()],
             [
                 'skor_pretest' => round($skor),
-                // Gunakan DB::raw untuk menambah XP yang sudah ada di database tanpa menimpanya
                 'total_xp' => DB::raw("total_xp + " . ($benar * 10))
             ]
         );
 
+        // Mengunci status siswa agar tidak bisa mengakses halaman pre-test kembali
+        $user = Auth::user();
+        if ($user) {
+            $user->is_pretest_done = true;
+            /** @var \App\Models\User $user */
+            $user->save();
+        }
+
         return view('siswa.hasil', compact('skor', 'benar', 'totalSoal'));
     }
 
-    /**
-     * Simpan Skor Game (AJAX/Fetch API)
-     */
+    // Menyimpan perolehan skor game via AJAX/Fetch API (Hanya menyimpan jika lebih tinggi)
     public function saveScore(Request $request)
     {
-        // Validasi input agar tidak ada data sampah masuk
         $validated = $request->validate([
             'score' => 'required|integer|min:0',
             'type' => 'required|string|in:literasi,numerasi'
@@ -77,25 +99,24 @@ class UjianController extends Controller
 
         try {
             $user_id = Auth::id();
-
-            // Cari data lama, atau siapkan data baru jika user belum pernah punya record
             $hasil = HasilBelajar::firstOrNew(['user_id' => $user_id]);
 
-            // Update skor spesifik berdasarkan tipe game
             if ($validated['type'] == 'literasi') {
-                $hasil->skor_game_literasi += $validated['score'];
+                // Gunakan fungsi max() agar hanya menimpa jika skor baru lebih besar
+                $hasil->skor_game_literasi = max($hasil->skor_game_literasi, $validated['score']);
             } else {
-                $hasil->skor_game_numerasi += $validated['score'];
+                $hasil->skor_game_numerasi = max($hasil->skor_game_numerasi, $validated['score']);
             }
 
-            // Tambahkan ke total XP global
-            $hasil->total_xp += $validated['score'];
             $hasil->save();
+
+            // Hitung ulang total XP terbaru untuk dikirim kembali sebagai respon JSON game
+            $newXp = $hasil->skor_pretest + $hasil->skor_game_literasi + $hasil->skor_game_numerasi;
 
             return response()->json([
                 'success' => true,
-                'message' => 'Hebat! Skor ' . $validated['type'] . ' berhasil disimpan.',
-                'new_xp' => $hasil->total_xp
+                'message' => 'Hebat! Skor ' . $validated['type'] . ' berhasil diproses.',
+                'new_xp' => $newXp
             ]);
 
         } catch (\Exception $e) {

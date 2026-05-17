@@ -20,7 +20,7 @@ Route::get('/', function () {
 
 // RUTE KHUSUS LOGIN SISWA (BARU)
 Route::get('/login-siswa', function () {
-    return view('login_siswa'); 
+    return view('login_siswa');
 })->middleware('guest')->name('login.siswa');
 
 // ==========================================
@@ -58,6 +58,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::delete('/kelas/{kelas_id}/siswa/{user_id}', [KelasController::class, 'hapusSiswa'])->name('admin.kelas.siswa.hapus');
 });
 
+
+
+
 // ==========================================
 // 4. RUTE KHUSUS GURU
 // ==========================================
@@ -75,25 +78,19 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->group(function () {
 });
 
 // ==========================================
-// 5. RUTE KHUSUS SISWA
+// 5. RUTE KHUSUS SISWA (Sudah Dilindungi Satpam)
 // ==========================================
-Route::middleware(['auth', 'role:siswa'])->prefix('siswa')->name('siswa.')->group(function () {
+Route::middleware(['auth', 'role:siswa', 'force.pretest'])->prefix('siswa')->name('siswa.')->group(function () {
 
-    // Dashboard Utama
     Route::get('/dashboard', [DashboardController::class, 'siswa'])->name('dashboard');
-
-    // Fitur Pre-test (Tugas Anggota 4)
-    // URL: /siswa/pretest
     Route::get('/pretest', [UjianController::class, 'index'])->name('pretest');
     Route::post('/pretest/simpan', [UjianController::class, 'simpanJawaban'])->name('pretest.simpan');
-    Route::get('/pretest/selesai', [UjianController::class, 'selesai'])->name('pretest.selesai');
+    Route::get('/pretest/selesai', [UjianController::class, 'selesai'])->name('pretest.selesai'); // Sesuaikan jika nama rutenya berbeda di timmu
 
-    // Fitur Game
     Route::get('/game', [GameController::class, 'index'])->name('game.index');
     Route::get('/game/play/{tipe}', [GameController::class, 'play'])->name('game.play');
-
-    // Pipa Data: Simpan Skor Game ke Database
-    Route::post('/game/save-score', [UjianController::class, 'saveScore'])->name('game.save-score');
+    Route::get('/modul/{kategori}', [ModulController::class, 'siswaShow'])->name('modul.show');
+    Route::post('/game/simpan-skor', [GameController::class, 'simpanSkor'])->name('game.simpanSkor');
 });
 // ==========================================
 // 6. AUTH ROUTES

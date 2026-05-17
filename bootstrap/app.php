@@ -3,7 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\RoleMiddleware; // <-- Tambahkan ini di atas
+use App\Http\Middleware\RoleMiddleware;
+use App\Http\Middleware\ForcePretestMiddleware; // <-- 1. Kita panggil namespace satpam baru di sini
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,9 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Daftarkan nama panggilan untuk satpam kita
+        // 2. Daftarkan nama panggilan untuk satpam-satpam kita di sini
         $middleware->alias([
-            'role' => RoleMiddleware::class,
+            'role' => RoleMiddleware::class, // Bawaan tim kamu
+            'force.pretest' => ForcePretestMiddleware::class, // <-- Tambahan satpam pengunci pretest kita
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -7,7 +7,7 @@
 
     <div class="py-12" style="background-color: #FEFDDF; min-height: 100vh;">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
+
             {{-- Selamat Datang --}}
             <div class="rounded-lg p-6 mb-6 text-white" style="background-color: #E87F24;">
                 <h1 class="text-2xl font-bold">Selamat Datang, {{ Auth::user()->name }}! 👋</h1>
@@ -22,12 +22,12 @@
             {{-- Menu Admin --}}
             @if(Auth::user()->role === 'admin')
             <div class="grid grid-cols-2 gap-4">
-                <a href="{{ route('admin.akun.index') }}" 
+                <a href="{{ route('admin.akun.index') }}"
                    class="rounded-lg p-6 text-white text-center font-semibold text-lg shadow hover:opacity-90"
                    style="background-color: #E87F24;">
                     👤 Kelola Akun
                 </a>
-                <a href="{{ route('kelas.index') }}" 
+                <a href="{{ route('kelas.index') }}"
                    class="rounded-lg p-6 text-white text-center font-semibold text-lg shadow hover:opacity-90"
                    style="background-color: #FFC81E; color: #333;">
                     🏫 Kelola Kelas
@@ -38,12 +38,12 @@
             {{-- Menu Guru --}}
             @if(Auth::user()->role === 'guru')
             <div class="grid grid-cols-2 gap-4">
-                <a href="#" 
+                <a href="#"
                    class="rounded-lg p-6 text-white text-center font-semibold text-lg shadow hover:opacity-90"
                    style="background-color: #E87F24;">
                     📝 Bank Soal
                 </a>
-                <a href="#" 
+                <a href="#"
                    class="rounded-lg p-6 text-center font-semibold text-lg shadow hover:opacity-90"
                    style="background-color: #FFC81E; color: #333;">
                     📊 Progress Siswa
@@ -54,12 +54,12 @@
             {{-- Menu Siswa --}}
             @if(Auth::user()->role === 'siswa')
             <div class="grid grid-cols-2 gap-4">
-                <a href="#" 
+                <a href="#"
                    class="rounded-lg p-6 text-white text-center font-semibold text-lg shadow hover:opacity-90"
                    style="background-color: #E87F24;">
                     🎮 Game Edukasi
                 </a>
-                <a href="#" 
+                <a href="#"
                    class="rounded-lg p-6 text-center font-semibold text-lg shadow hover:opacity-90"
                    style="background-color: #73A5CA; color: white;">
                     📈 Progress Saya
