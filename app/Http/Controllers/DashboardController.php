@@ -11,11 +11,16 @@ use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
     // Halaman Dashboard Admin
+    /**
+     * Tampilkan Dashboard Khusus Admin
+     */
     public function admin()
     {
         $totalSiswa = User::where('role', 'siswa')->count();
         $totalGuru = User::where('role', 'guru')->count();
-        $penggunaTerbaru = User::latest()->take(5)->get();
+
+        // Mengambil 5 data siswa terbaru
+        $penggunaTerbaru = User::where('role', 'siswa')->latest()->take(5)->get();
 
         return view('admin.dashboard', compact('totalSiswa', 'totalGuru', 'penggunaTerbaru'));
     }
