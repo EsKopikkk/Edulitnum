@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700;900&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght=500;700;900&family=Poppins:wght=500;700;800&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -94,7 +94,6 @@
 
     <nav class="p-3 glass-panel shadow-md border-b-2 border-white/40 z-40 mx-4 my-2 rounded-full relative shrink-0">
         <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
-
             <div class="flex items-center gap-2 font-black text-blue-950 font-kids tracking-wide text-base shrink-0">
                 🤿 <span>MISI AWAL</span>
             </div>
@@ -125,9 +124,7 @@
 
             @foreach($daftarSoal as $index => $soal)
             <div class="soal-card glass-panel rounded-[32px] p-5 md:p-8 shadow-xl border-4 border-white {{ $index == 0 ? 'active' : '' }}" data-index="{{ $index }}" data-text="{{ $soal->pertanyaan }}">
-
                 <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center">
-
                     <div class="lg:w-1/2 text-center lg:text-left w-full">
                         <div class="inline-block bg-white/80 text-blue-950 border border-white px-4 py-1 rounded-full font-black text-[11px] uppercase tracking-widest mb-3 shadow-sm">
                             @if(strtolower($soal->kategori) === 'literasi') 🐙 @else 🦈 @endif Misi {{ $soal->kategori }}
@@ -138,7 +135,7 @@
                     <div class="lg:w-1/2 w-full grid grid-cols-1 gap-2.5">
                         @foreach(['a', 'b', 'c', 'd'] as $opsi)
                         <label class="option-item-{{ $index }} opacity-0 translate-x-10 cursor-pointer block">
-                            <input type="radio" name="jawaban[{{ $soal->id }}]" value="{{ $opsi }}" class="peer hidden" required>
+                            <input type="radio" name="jawaban[{{ $soal->id }}]" value="{{ strtoupper($opsi) }}" class="peer hidden" required>
                             <div class="option-btn bg-white/90 border-2 border-white p-3.5 rounded-xl flex items-center gap-3 shadow-sm hover:bg-white text-blue-950">
                                 <div class="w-8 h-8 bg-amber-400 text-white rounded-lg flex items-center justify-center font-black text-base shrink-0 shadow-sm font-kids">
                                     {{ strtoupper($opsi) }}
@@ -159,7 +156,7 @@
                         <button type="button" onclick="prevSoal({{ $index }})" class="text-blue-950/60 font-black flex items-center gap-1.5 hover:text-edu-orange transition-all font-kids text-xs bg-white/40 px-3 py-1.5 rounded-full border border-white/50">
                             <span>⬅️</span> KEMBALI
                         </button>
-                    @else <div></div> @endif
+                    @author <div></div> @endif
 
                     @if($index < count($daftarSoal) - 1)
                         <button type="button" onclick="nextSoal({{ $index }})" class="bg-edu-orange hover:bg-orange-600 border-2 border-white text-white px-8 py-3.5 rounded-full font-black text-base shadow-md transition-all shadow-orange-600/20 active:scale-95 font-kids tracking-wide">
@@ -292,6 +289,15 @@
             gsap.to('#progress-bar', { width: percent + '%', duration: 0.6 });
             document.getElementById('soal-counter').innerText = `Misi ${step} / ${totalSoal}`;
         }
+
+        // Hotfix: Pengunci submit penjamin data sisa waktu soal terakhir terekam sempurna
+        document.getElementById('exam-form').addEventListener('submit', function(e) {
+            clearInterval(timerId);
+            const lastHiddenInput = document.getElementById(`sisa-waktu-${currentActiveIndex}`);
+            if (lastHiddenInput) {
+                lastHiddenInput.value = timeLeft;
+            }
+        });
 
         const bubblesContainer = document.getElementById('bubbles-container');
         for (let i = 0; i < 12; i++) {

@@ -86,14 +86,19 @@ class UjianController extends Controller
             $user->save();
         }
 
-        return view('siswa.hasil', compact('skor', 'benar', 'totalSoal'));
+        // Hotfix: Memastikan skor dilempar dalam kondisi angka bulat utuh (integer)
+        return view('siswa.hasil', [
+            'skor' => (int) round($skor),
+            'benar' => $benar,
+            'totalSoal' => $totalSoal
+        ]);
     }
 
     // Menyimpan perolehan skor game via AJAX/Fetch API (Hanya menyimpan jika lebih tinggi)
     public function saveScore(Request $request)
     {
         $validated = $request->validate([
-            'score' => 'required|integer|min:0',
+            'score' => 'required|integer|min:0|max:100',
             'type' => 'required|string|in:literasi,numerasi'
         ]);
 
@@ -102,7 +107,6 @@ class UjianController extends Controller
             $hasil = HasilBelajar::firstOrNew(['user_id' => $user_id]);
 
             if ($validated['type'] == 'literasi') {
-                // Gunakan fungsi max() agar hanya menimpa jika skor baru lebih besar
                 $hasil->skor_game_literasi = max($hasil->skor_game_literasi, $validated['score']);
             } else {
                 $hasil->skor_game_numerasi = max($hasil->skor_game_numerasi, $validated['score']);
@@ -110,7 +114,6 @@ class UjianController extends Controller
 
             $hasil->save();
 
-            // Hitung ulang total XP terbaru untuk dikirim kembali sebagai respon JSON game
             $newXp = $hasil->skor_pretest + $hasil->skor_game_literasi + $hasil->skor_game_numerasi;
 
             return response()->json([

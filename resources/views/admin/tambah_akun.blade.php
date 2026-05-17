@@ -42,13 +42,23 @@
         <div class="mb-8">
             <label for="role" class="block text-sm font-black text-edu-dark tracking-widest uppercase mb-2">Role / Peran</label>
             <select id="role" name="role" required
-                class="w-full px-5 py-4 rounded-2xl bg-white border-2 border-transparent focus:border-edu-blue focus:ring-0 text-edu-dark font-medium transition-all shadow-sm outline-none cursor-pointer">
+                class="w-full px-5 py-4 rounded-2xl bg-white border-2 border-transparent focus:border-edu-blue focus:ring-0 text-edu-dark font-medium transition-all shadow-sm outline-none cursor-pointer"
+                onchange="toggleNisField()">
                 <option value="" disabled selected>Pilih peran pengguna...</option>
                 <option value="admin">Admin</option>
                 <option value="guru">Guru</option>
                 <option value="siswa">Siswa</option>
             </select>
             @error('role') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+        </div>
+
+        <!-- Input NIS (hanya untuk siswa) -->
+        <div class="mb-8 hidden" id="nis-field">
+            <label for="nis" class="block text-sm font-black text-edu-dark tracking-widest uppercase mb-2">Nomor Induk Siswa (NIS)</label>
+            <input type="text" id="nis" name="nis" value="{{ old('nis') }}"
+                class="w-full px-5 py-4 rounded-2xl bg-white border-2 border-transparent focus:border-edu-blue focus:ring-0 text-edu-dark font-medium transition-all shadow-sm outline-none"
+                placeholder="Masukkan NIS siswa">
+            @error('nis') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
         </div>
 
         <!-- Tombol Aksi -->
@@ -62,4 +72,17 @@
         </div>
     </form>
 </div>
+
+<script>
+    function toggleNisField() {
+        const role = document.getElementById('role').value;
+        const nisField = document.getElementById('nis-field');
+
+        if (role === 'siswa') {
+            nisField.classList.remove('hidden');
+        } else {
+            nisField.classList.add('hidden');
+        }
+    }
+</script>
 @endsection

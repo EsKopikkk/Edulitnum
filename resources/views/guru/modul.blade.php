@@ -59,7 +59,7 @@
                     Buat Modul Ajar
                 </h3>
 
-                <form action="{{ route('modul.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+                <form action="{{ route('modul.store') }}" method="POST" enctype="multipart/form-data" enctype="multipart/form-data" class="space-y-5">
                     @csrf
                     <div>
                         <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-2">Judul Materi ✏️</label>
@@ -104,6 +104,12 @@
                     <div>
                         <label class="text-xs font-black text-gray-400 uppercase tracking-widest ml-2">Gambar Ilustrasi Materi (Di Dalam) 🎨</label>
                         <input type="file" name="gambar_konten" class="w-full bg-blue-50 border-2 border-dashed border-edu-blue/20 rounded-2xl p-3 mt-1 text-sm text-gray-400 cursor-pointer">
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">📎 File Materi (PDF, Doc, PPT, Gambar)</label>
+                        <input type="file" name="file_materi" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 font-medium mt-1 focus:border-edu-orange focus:outline-none transition-colors cursor-pointer" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png">
+                        <p class="text-xs text-gray-400 mt-2">Ukuran max: 10MB (Opsional)</p>
                     </div>
 
                     <button type="submit" class="w-full bg-edu-orange text-white py-5 rounded-3xl font-black text-sm uppercase tracking-widest mt-4 shadow-xl hover:shadow-edu-orange/40 transition-all transform active:scale-95">

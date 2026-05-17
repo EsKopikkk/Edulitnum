@@ -145,6 +145,11 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                 </button>
 
+                <div class="text-center mt-6">
+                    <button type="button" onclick="openForgotPasswordModal()" class="text-edu-orange font-semibold text-sm hover:text-edu-dark transition-colors">
+                        Lupa Password?
+                    </button>
+                </div>
             </form>
         </div>
 
@@ -153,7 +158,93 @@
         </p>
     </div>
 
+    <!-- Modal Lupa Password -->
+    <div id="forgot-password-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" onclick="closeForgotPasswordModal()"></div>
+
+        <div class="relative bg-white rounded-[40px] shadow-2xl p-8 w-full max-w-md mx-4 flex flex-col gap-5">
+            <div class="text-center mb-4">
+                <h3 class="font-black text-edu-dark text-lg">Lupa Password?</h3>
+                <p class="text-gray-500 text-sm mt-2">Masukkan nama Anda untuk request reset password</p>
+            </div>
+
+            <div id="success-message" class="hidden p-4 bg-green-100 text-green-700 rounded-2xl text-sm font-bold">
+                ✅ Request berhasil! Admin akan segera mereset password Anda.
+            </div>
+
+            <form id="forgot-password-form" method="POST" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-edu-blue mb-2 ml-1">Nama Lengkap</label>
+                    <input type="text" name="name" id="forgot-name" placeholder="Masukkan nama lengkap Anda"
+                        class="input-field w-full px-6 py-3 rounded-2xl text-edu-dark font-semibold border-2 border-transparent focus:border-edu-blue" required>
+                    <span id="error-message" class="text-red-500 text-xs mt-2 font-semibold hidden"></span>
+                </div>
+
+                <div class="flex gap-3 mt-6">
+                    <button type="button" onclick="closeForgotPasswordModal()" class="flex-1 px-4 py-3 bg-gray-100 text-gray-500 font-bold rounded-2xl hover:bg-gray-200 transition-all text-sm">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 px-4 py-3 bg-edu-orange text-white font-bold rounded-2xl hover:bg-edu-dark shadow-lg shadow-edu-orange/30 transition-all text-sm">
+                        Request Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        function openForgotPasswordModal() {
+            document.getElementById('forgot-password-modal').classList.remove('hidden');
+            document.getElementById('forgot-name').focus();
+        }
+
+        function closeForgotPasswordModal() {
+            document.getElementById('forgot-password-modal').classList.add('hidden');
+            document.getElementById('forgot-name').value = '';
+            document.getElementById('error-message').classList.add('hidden');
+            document.getElementById('success-message').classList.add('hidden');
+        }
+
+        document.getElementById('forgot-password-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('forgot-name').value;
+            const errorMsg = document.getElementById('error-message');
+            const successMsg = document.getElementById('success-message');
+
+            try {
+                const response = await fetch('{{ route("password.request.submit") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    },
+                    body: JSON.stringify({ name: name })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    errorMsg.classList.add('hidden');
+                    successMsg.classList.remove('hidden');
+                    document.getElementById('forgot-password-form').style.display = 'none';
+
+                    setTimeout(() => {
+                        closeForgotPasswordModal();
+                        document.getElementById('forgot-password-form').style.display = 'block';
+                    }, 3000);
+                } else {
+                    successMsg.classList.add('hidden');
+                    errorMsg.textContent = data.message || 'Nama guru tidak ditemukan';
+                    errorMsg.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorMsg.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
+                errorMsg.classList.remove('hidden');
+            }
+        });
+
         const inputs = [
             { el: document.getElementById('name-input'), fullText: 'Siapa nama lengkap kamu? . . .' },
             { el: document.getElementById('pass-input'), fullText: 'Masukkan kata sandi rahasiamu . . .' }

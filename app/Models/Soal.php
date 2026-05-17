@@ -16,6 +16,7 @@ class Soal extends Model
         'modul_id',
         'pertanyaan',
         'kategori',
+        'tipe',
         'pilihan_a',
         'pilihan_b',
         'pilihan_c',
@@ -25,7 +26,6 @@ class Soal extends Model
         'fase'
     ];
 
-    // Relasi ke Modul (Wajib di dalam kurung kurawal class)
     public function modul()
     {
         return $this->belongsTo(Modul::class, 'modul_id');

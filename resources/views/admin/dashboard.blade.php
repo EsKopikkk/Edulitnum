@@ -136,7 +136,7 @@
                     class="absolute -right-4 -top-4 w-24 h-24 bg-edu-orange/5 rounded-full group-hover:scale-150 transition-transform duration-500">
                 </div>
                 <p class="text-gray-400 font-bold text-xs uppercase tracking-[0.2em] mb-2">Total Siswa</p>
-                <h3 class="text-4xl font-black text-edu-dark">1,284</h3>
+                <h3 class="text-4xl font-black text-edu-dark">{{ number_format($totalSiswa, 0, ',', '.') }}</h3>
                 <div class="mt-4 flex items-center gap-2 text-green-500 text-xs font-bold">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                         <path
@@ -151,7 +151,7 @@
                     class="absolute -right-4 -top-4 w-24 h-24 bg-edu-blue/5 rounded-full group-hover:scale-150 transition-transform duration-500">
                 </div>
                 <p class="text-gray-400 font-bold text-xs uppercase tracking-[0.2em] mb-2">Total Guru</p>
-                <h3 class="text-4xl font-black text-edu-dark">42</h3>
+                <h3 class="text-4xl font-black text-edu-dark">{{ number_format($totalGuru, 0, ',', '.') }}</h3>
                 <p class="mt-4 text-gray-400 text-xs font-medium italic">Semua Aktif</p>
             </div>
 
@@ -170,7 +170,6 @@
         <div class="bg-white/60 backdrop-blur-md p-10 rounded-[40px] border border-white shadow-xl shadow-black/5">
             <div class="flex justify-between items-center mb-8">
                 <h3 class="text-xl font-black text-edu-dark tracking-tight">Pengguna Terbaru</h3>
-                <button class="text-edu-blue font-bold text-sm hover:underline">Lihat Semua</button>
             </div>
             <table class="w-full text-left">
                 <thead>
@@ -178,21 +177,31 @@
                         <th class="pb-4 font-black">Nama</th>
                         <th class="pb-4 font-black">Role</th>
                         <th class="pb-4 font-black">Status</th>
-                        <th class="pb-4 font-black text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-sm font-semibold">
-                    <tr class="border-b border-gray-50/50">
-                        <td class="py-5 text-edu-dark">Was Akmal</td>
-                        <td class="py-5"><span
-                                class="px-3 py-1 bg-edu-blue/10 text-edu-blue rounded-full text-[10px]">SISWA</span>
-                        </td>
-                        <td class="py-5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-2"></span>Online
-                        </td>
-                        <td class="py-5 text-right"><button
-                                class="px-4 py-2 bg-gray-100 hover:bg-edu-orange hover:text-white rounded-xl transition-all">Detail</button>
-                        </td>
-                    </tr>
+                    @forelse($penggunaTerbaru as $user)
+                        <tr class="border-b border-gray-50/50">
+                            <td class="py-5 text-edu-dark">{{ $user->name }}</td>
+
+                            <td class="py-5">
+                                <span class="px-3 py-1 bg-edu-blue/10 text-edu-blue rounded-full text-[10px] uppercase">
+                                    {{ $user->role }}
+                                </span>
+                            </td>
+
+                            <td class="py-5">
+                                <span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-2"></span>Terdaftar
+                            </td>
+
+                           
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="py-5 text-center text-gray-400 italic">Belum ada data siswa yang
+                                terdaftar.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

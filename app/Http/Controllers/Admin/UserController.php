@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Mail\ResetPasswordNotification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -18,22 +19,43 @@ class UserController extends Controller
         return view('admin.kelola_akun', compact('users'));
     }
 
+    // Fungsi untuk menampilkan notifikasi password reset
+    public function notifikasi()
+    {
+        $resetRequests = User::where('reset_password_requested', true)->get();
+        return view('admin.notifikasi', compact('resetRequests'));
+    }
+
     // Fungsi untuk menyimpan akun baru ke database
     public function store(Request $request)
     {
-        $request->validate([
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required', 'in:siswa,guru'],
-        ]);
+        ];
 
-        User::create([
+        // Validasi NIS hanya jika role adalah siswa
+        if ($request->role === 'siswa') {
+            $rules['nis'] = ['required', 'string', 'unique:users,nis'];
+        }
+
+        $request->validate($rules);
+
+        $userData = [
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'role' => $request->role,
-        ]);
+        ];
+
+        // Tambahkan NIS jika role siswa
+        if ($request->role === 'siswa') {
+            $userData['nis'] = $request->nis;
+        }
+
+        User::create($userData);
 
         return back()->with('success', 'Akun berhasil ditambahkan!');
     }
@@ -58,21 +80,76 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Validasi data yang masuk
-        $request->validate([
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'role' => ['required', 'in:admin,guru,siswa'],
-        ]);
+        ];
 
-        // Update data di database
-        $user->update([
+        // Validasi NIS hanya jika role adalah siswa
+        if ($request->role === 'siswa') {
+            $rules['nis'] = ['required', 'string', 'unique:users,nis,' . $user->id];
+        }
+
+        // Validasi password jika diisi
+        if ($request->filled('password')) {
+            $rules['password'] = ['required', 'string', 'min:8'];
+        }
+
+        $request->validate($rules);
+
+        $updateData = [
             'name' => $request->name,
             'role' => $request->role,
-        ]);
+        ];
+
+        // Tambahkan NIS jika role siswa
+        if ($request->role === 'siswa') {
+            $updateData['nis'] = $request->nis;
+        } else {
+            $updateData['nis'] = null;
+        }
+
+        // Update password jika diisi
+        $passwordUpdated = false;
+        if ($request->filled('password')) {
+            $updateData['password'] = $request->password;
+            $passwordUpdated = true;
+
+            // Jika user request reset password, kirim email
+            if ($user->reset_password_requested) {
+                try {
+                    Mail::to($user->email)->send(new ResetPasswordNotification($user, $request->password));
+                } catch (\Exception $e) {
+                    \Log::error('Email gagal dikirim: ' . $e->getMessage());
+                }
+            }
+        }
+
+        // Update data di database
+        $user->update($updateData);
+
+        // Refresh user object dari database untuk get updated values
+        $user->refresh();
 
         // Kembalikan ke halaman tabel dengan pesan sukses
+        if ($passwordUpdated && isset($updateData['reset_password_requested']) && $updateData['reset_password_requested'] === false) {
+            return redirect()->route('admin.akun.index')->with('success', 'Password berhasil di-update dan email telah dikirim ke ' . $user->email);
+        }
+
         return redirect()->route('admin.akun.index')->with('success', 'Data user berhasil diperbarui!');
     }
+    // Fungsi untuk menandai notifikasi sudah selesai
+    public function markNotificationDone($id)
+    {
+        $user = User::findOrFail($id);
+        $user->update([
+            'reset_password_requested' => false,
+            'reset_password_requested_at' => null,
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Notifikasi sudah ditandai selesai!']);
+    }
+
     // Fungsi untuk menghapus akun
     public function destroy($id)
     {

@@ -24,11 +24,6 @@ protected $fillable = [
         return $this->hasMany(Soal::class);
     }
 
-    public function modul()
-{
-    // Tambahkan \App\Models\ di depannya
-    return $this->belongsTo(\App\Models\Modul::class, 'modul_id');
-}
 
 // 1 Modul memiliki banyak Soal
 public function soals()

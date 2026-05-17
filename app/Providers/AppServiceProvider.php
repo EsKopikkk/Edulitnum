@@ -19,6 +19,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\View::composer('layouts.admin', function ($view) {
+            $resetRequests = \App\Models\User::where('reset_password_requested', true)->get();
+            $notificationCount = $resetRequests->count();
+
+            $view->with([
+                'resetRequests' => $resetRequests,
+                'notificationCount' => $notificationCount,
+            ]);
+        });
     }
 }

@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -37,7 +35,7 @@ class DatabaseSeeder extends Seeder
 
         // --- 3. SEED DATA SISWA (Format NIS Berkode Kelas) ---
         $siswas = [
-            ['name' => 'Akmal', 'kelas' => 'A', 'number' => '001'], // NIS:   
+            ['name' => 'Akmal', 'kelas' => 'A', 'number' => '001'], // NIS: EDA001
             ['name' => 'Ojhy',  'kelas' => 'A', 'number' => '002'], // NIS: EDA002
             ['name' => 'Riyadhy','kelas' => 'B', 'number' => '001'], // NIS: EDB001
             ['name' => 'Yunita', 'kelas' => 'B', 'number' => '002'], // NIS: EDB002
@@ -56,7 +54,14 @@ class DatabaseSeeder extends Seeder
 
         // --- 4. PANGGIL SOAL SEEDER ---
         $this->call([
+            UserSeeder::class,
             SoalSeeder::class,
         ]);
     }
 }
+
+
+/**
+ * Panggil UserSeeder dan SoalSeeder
+ * (User sudah di-handle di UserSeeder, jadi tidak perlu bikin manual di sini)
+ */

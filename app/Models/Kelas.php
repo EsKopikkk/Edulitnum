@@ -23,4 +23,9 @@ class Kelas extends Model
     {
         return $this->hasMany(SiswaDetail::class, 'kelas_id');
     }
+
+    public function modul()
+    {
+        return $this->hasMany(Modul::class);
+    }
 }

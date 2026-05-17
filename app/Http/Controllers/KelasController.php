@@ -15,16 +15,6 @@ public function index()
     return view('admin.kelola_kelas', compact('kelas'));
 }
 
-public function manageModul($id)
-{
-    // Mengambil data kelas tertentu
-    $kelas = Kelas::findOrFail($id);
-    
-    // Mengambil soal dari tabel soal yang fasenya sama dengan fase kelas tersebut [cite: 86-90]
-    $moduls = \App\Models\Soal::where('fase', $kelas->fase)->get();
-
-    return view('admin.kelola_modul', compact('kelas', 'moduls'));
-}
 
     public function create()
     {
@@ -82,7 +72,7 @@ public function kelolaSiswa(Kelas $kelas)
 {
     $siswaDiKelas = $kelas->siswa()->with('user')->get();
     $semuaSiswa = User::where('role', 'siswa')->get();
-    return view('admin.kelola_siswa_kelas', compact('kelas', 'siswaDiKelas', 'semuaSiswa'));
+    return view('admin.kelola_siswa', compact('kelas', 'siswaDiKelas', 'semuaSiswa'));
 }
 
 // Tambah siswa ke kelas
@@ -116,5 +106,6 @@ public function hapusSiswa($kelas_id, $user_id)
 
     return back()->with('success', 'Siswa berhasil dikeluarkan dari kelas!');
 }
+
 
 }

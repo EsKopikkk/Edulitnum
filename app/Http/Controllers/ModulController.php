@@ -11,50 +11,54 @@ class ModulController extends Controller
     public function index()
     {
         $moduls = Modul::latest()->get();
-        $kelas = Kelas::all(); 
+        $kelas = Kelas::all();
         return view('guru.modul', compact('moduls', 'kelas'));
+    }
+
+    /**
+     * Menampilkan halaman modul untuk siswa
+     */
+    public function siswaShow($kategori = null)
+    {
+        $user = auth()->user();
+
+        // Ambil kelas siswa
+        $kelasSiswa = $user->siswaDetail()->first()?->kelas;
+
+        if (!$kelasSiswa) {
+            return view('siswa.modul.belum-kelas');
+        }
+
+        // Ambil modul dari kelas siswa
+        $moduls = Modul::where('kelas_id', $kelasSiswa->id)->get();
+
+        return view('siswa.modul.literasi', compact('moduls', 'kelasSiswa'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'judul'     => 'required',
-            'kelas_id'  => 'required',
+            'judul' => 'required',
+            'kelas_id' => 'required',
             'deskripsi' => 'required',
-            'isi_materi' => 'required', // Kolom baru
-            'soal_numerik' => 'nullable', // Kolom baru
-            'jenis_modul' => 'required', // Kolom baru
-            'gambar'    => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'gambar_konten' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
         ]);
 
-        $data = $request->all();
+        Modul::create($request->all());
 
-        // 1. Simpan Gambar Sampul (Luar)
-        if ($request->hasFile('gambar')) {
-            $data['gambar'] = $request->file('gambar')->store('modul_sampul', 'public');
-        }
-
-        // 2. Simpan Gambar Isi (Materi)
-        if ($request->hasFile('gambar_konten')) {
-            $data['gambar_konten'] = $request->file('gambar_konten')->store('modul_konten', 'public');
-        }
-
-        Modul::create($data);
-        return redirect()->back()->with('success', 'Materi Berhasil Dibuat! 🚀✨');
+        return redirect()->back()->with('success', 'Modul materi baru berhasil dibuat! 📚');
     }
-
-   public function show($id)
-{
-    // Ambil data modul beserta kelas dan daftar soalnya
-    $modul = Modul::with(['kelas', 'soals'])->findOrFail($id);
-    
-    return view('guru.show_modul', compact('modul'));
-}
 
     public function destroy($id)
     {
         Modul::destroy($id);
-        return redirect()->back()->with('success', 'Modul berhasil dihapus! 🗑️');
+        return redirect()->back()->with('success', 'Modul materi berhasil dihapus! 🗑️');
+    }
+
+    public function show($id)
+    {
+        // Ambil data modul beserta kelasnya
+        $modul = Modul::with('kelas')->findOrFail($id);
+        
+        return view('guru.show_modul', compact('modul'));
     }
 }
