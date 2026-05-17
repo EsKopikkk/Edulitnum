@@ -52,8 +52,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 });
 
 
-
-
 // ==========================================
 // 4. RUTE KHUSUS GURU
 // ==========================================
@@ -65,10 +63,14 @@ Route::middleware(['auth', 'role:guru'])->prefix('guru')->group(function () {
     // Fitur Import Excel
     Route::post('/soal/import', [SoalController::class, 'import'])->name('soal.import');
 
+    // FITUR BARU: Hapus Semua Soal Secara Global di Bank Soal
+    Route::delete('/soal/delete-all-global', [SoalController::class, 'deleteAllGlobal'])->name('soal.deleteAllGlobal');
+
     // Resource Soal & Modul
     Route::resource('soal', SoalController::class);
     Route::resource('modul', ModulController::class);
 });
+
 
 // ==========================================
 // 5. RUTE KHUSUS SISWA (Sudah Dilindungi Satpam)
@@ -78,13 +80,14 @@ Route::middleware(['auth', 'role:siswa', 'force.pretest'])->prefix('siswa')->nam
     Route::get('/dashboard', [DashboardController::class, 'siswa'])->name('dashboard');
     Route::get('/pretest', [UjianController::class, 'index'])->name('pretest');
     Route::post('/pretest/simpan', [UjianController::class, 'simpanJawaban'])->name('pretest.simpan');
-    Route::get('/pretest/selesai', [UjianController::class, 'selesai'])->name('pretest.selesai'); // Sesuaikan jika nama rutenya berbeda di timmu
+    Route::get('/pretest/selesai', [UjianController::class, 'selesai'])->name('pretest.selesai'); 
 
     Route::get('/game', [GameController::class, 'index'])->name('game.index');
     Route::get('/game/play/{tipe}', [GameController::class, 'play'])->name('game.play');
     Route::get('/modul/{kategori}', [ModulController::class, 'siswaShow'])->name('modul.show');
     Route::post('/game/save-score', [UjianController::class, 'saveScore'])->name('game.save-score');
 });
+
 // ==========================================
 // 6. AUTH ROUTES
 // ==========================================

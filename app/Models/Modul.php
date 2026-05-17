@@ -9,8 +9,9 @@ class Modul extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['kelas_id', 'judul', 'deskripsi', 'file_materi', 'gambar', 'gambar_konten'];
-
+protected $fillable = [
+    'judul', 'kelas_id', 'jenis_modul', 'deskripsi', 'isi_materi', 'soal_numerik', 'gambar', 'gambar_konten'
+];
     // 1 Modul dimiliki oleh 1 Kelas
     public function kelas()
     {
@@ -28,4 +29,13 @@ class Modul extends Model
     // Tambahkan \App\Models\ di depannya
     return $this->belongsTo(\App\Models\Modul::class, 'modul_id');
 }
+
+// 1 Modul memiliki banyak Soal
+public function soals()
+{
+    return $this->hasMany(Soal::class, 'modul_id');
+}
+
+
+
 }

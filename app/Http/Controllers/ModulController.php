@@ -21,6 +21,9 @@ class ModulController extends Controller
             'judul'     => 'required',
             'kelas_id'  => 'required',
             'deskripsi' => 'required',
+            'isi_materi' => 'required', // Kolom baru
+            'soal_numerik' => 'nullable', // Kolom baru
+            'jenis_modul' => 'required', // Kolom baru
             'gambar'    => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'gambar_konten' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
         ]);
@@ -41,11 +44,13 @@ class ModulController extends Controller
         return redirect()->back()->with('success', 'Materi Berhasil Dibuat! 🚀✨');
     }
 
-    public function show($id)
-    {
-        $modul = Modul::with('kelas')->findOrFail($id);
-        return view('guru.show_modul', compact('modul'));
-    }
+   public function show($id)
+{
+    // Ambil data modul beserta kelas dan daftar soalnya
+    $modul = Modul::with(['kelas', 'soals'])->findOrFail($id);
+    
+    return view('guru.show_modul', compact('modul'));
+}
 
     public function destroy($id)
     {

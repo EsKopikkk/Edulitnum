@@ -7,9 +7,7 @@
     <title>Edulitnum - Inovasi Literasi & Numerasi</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Poppins:wght@300;400;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -101,72 +99,66 @@
                 <div class="w-10 h-10 bg-edu-orange rounded-xl flex items-center justify-center shadow-lg rotate-3">
                     <span class="text-white font-black text-xl">E</span>
                 </div>
-                <span class="text-4xl font-black text-edu-dark tracking-tighter">Edu<span
-                        class="text-edu-orange">litnum</span></span>
+                <span class="text-4xl font-black text-edu-dark tracking-tighter">Edu<span class="text-edu-orange">litnum</span></span>
             </div>
 
             <div class="hidden md:block">
-                <span
-                    class="text-[10px] font-extrabold tracking-[0.3em] uppercase text-edu-orange bg-white/40 px-5 py-2 rounded-full border border-edu-orange/20">
+                <span class="text-[10px] font-extrabold tracking-[0.3em] uppercase text-edu-orange bg-white/40 px-5 py-2 rounded-full border border-edu-orange/20">
                     Platform Digital SD
                 </span>
             </div>
         </div>
     </header>
 
-    <main
-        class="relative z-10 text-center px-6 pt-48 pb-20 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-screen">
-        <div class="space-y-8">
-            <div class="space-y-4">
-                <h2 class="text-edu-blue font-bold tracking-[0.5em] text-sm uppercase animate-pulse">Edukasi Tanpa Batas
-                </h2>
-                <h1 class="text-6xl md:text-8xl font-black text-edu-dark leading-none tracking-tighter">
-                    Halo Sobat <span class="shimmer-text">Edulitnum!</span><br>
-                    Siap Berpetualang?
+    <main class="relative z-10 text-center px-6 pt-32 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-screen">
+        <div class="space-y-6">
+           🚀 Siap Berpetualang?
+                   <div class="space-y-3">
+                <h2 class="text-edu-blue font-bold tracking-[0.3em] text-xs uppercase animate-pulse">
+                  </h2>
+                
+                <h1 class="text-5xl md:text-7xl font-black text-edu-dark leading-none tracking-tighter">
+                    Main & Belajar di <br>
+                    <span class="shimmer-text">Edulitnum!</span>
                 </h1>
-                <p class="text-gray-500 text-lg md:text-2xl max-w-2xl mx-auto font-light leading-relaxed">
-                    Selamat datang kembali di platform literasi dan numerasi digital. Mari lanjutkan petualangan
-                    menuntut ilmu hari ini.
+            
+                    <p class="text-gray-500 text-base md:text-xl max-w-xl mx-auto font-medium leading-relaxed">
+                    Platform seru untuk asah kemampuan Literasi dan Numerasimu! 🎮📚
                 </p>
             </div>
 
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
-
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                 <a href="{{ route('login') }}"
-                    class="px-8 py-4 bg-[#E87F24] text-white font-bold rounded-full shadow-lg shadow-orange-500/30 hover:bg-[#D66D12] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
+                    class="w-full sm:w-auto px-8 py-4 bg-[#E87F24] text-white font-bold rounded-full shadow-lg shadow-orange-500/30 hover:bg-[#D66D12] hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2">
                     Get Started
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
                 </a>
 
                 <a href="{{ route('login.siswa') }}"
-                    class="px-8 py-4 bg-white border-2 border-[#73A5CA] text-[#73A5CA] font-bold rounded-full shadow-lg hover:bg-[#73A5CA] hover:text-white hover:-translate-y-1 transition-all duration-300 flex items-center gap-2 group">
+                    class="w-full sm:w-auto px-8 py-4 bg-white border-2 border-[#73A5CA] text-[#73A5CA] font-bold rounded-full shadow-lg hover:bg-[#73A5CA] hover:text-white hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 group">
                     Masuk sebagai Siswa
-                    <img src="{{ asset('images/coin.svg') }}" alt="Koin"
-                        class="w-6 h-6 group-hover:rotate-12 transition-transform">
+                    <img src="{{ asset('images/coin.svg') }}" alt="Koin" class="w-6 h-6 group-hover:rotate-12 transition-transform">
                 </a>
-
             </div>
         </div>
     </main>
 
-    <footer class="absolute bottom-1 w-full text-center z-20">
+    <footer class="absolute bottom-4 w-full text-center z-20">
         <div class="flex flex-col items-center gap-2">
-            <div class="flex gap-6 text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4">
+            <div class="flex gap-6 text-gray-400 text-[10px] font-bold tracking-widest uppercase mb-2">
                 <span class="hover:text-edu-orange cursor-pointer transition-colors">Digital Literacy</span>
                 <span class="text-edu-yellow">•</span>
                 <span class="hover:text-edu-blue cursor-pointer transition-colors">Numeracy Game</span>
                 <span class="text-edu-yellow">•</span>
                 <span class="hover:text-edu-orange cursor-pointer transition-colors">Expert System</span>
             </div>
-            <p class="text-gray-400 text-[10px] font-medium tracking-tighter opacity-50">
+            <p class="text-gray-400 text-[9px] font-medium tracking-tighter opacity-40">
                 © 2026 EDULITNUM ECOSYSTEM. POWERED BY EDULTIM24.
             </p>
         </div>
     </footer>
 
 </body>
-
 </html>

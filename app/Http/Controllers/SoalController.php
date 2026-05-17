@@ -27,24 +27,32 @@ class SoalController extends Controller
     }
 
     // Menyimpan Soal Baru ke Database
-    public function store(Request $request)
-    {
-        $request->validate([
-            'modul_id'      => 'required|exists:moduls,id',
-            'pertanyaan'    => 'required',
-            'kategori'      => 'required',
-            'fase'          => 'required',
-            'pilihan_a'     => 'required',
-            'pilihan_b'     => 'required',
-            'pilihan_c'     => 'required',
-            'pilihan_d'     => 'required',
-            'kunci_jawaban' => 'required',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'modul_id'      => 'required',
+        'fase'          => 'required',
+        'kategori'      => 'required',
+        'pertanyaan'    => 'required',
+        'pilihan_a'     => 'required',
+        'pilihan_b'     => 'required',
+        'pilihan_c'     => 'required',
+        'pilihan_d'     => 'required',
+        'kunci_jawaban' => 'required',
+    ]);
 
-        Soal::create($request->all());
+    // 1. Ambil semua data dari form
+    $data = $request->all();
 
-        return redirect()->route('soal.index')->with('success', 'Soal berhasil ditambahkan!');
-    }
+    // 2. PAKSA JADI HURUF KECIL DI SINI (Biar tidak akan pernah eror lagi)
+    $data['kategori'] = strtolower($request->kategori);
+    $data['fase']     = strtolower($request->fase);
+
+    // 3. Simpan ke database
+    Soal::create($data);
+
+    return redirect()->back()->with('success', 'Soal berhasil ditambahkan ke modul dan Bank Soal! 🚀✨');
+}
 
     // Menampilkan Form Edit Soal
     public function edit($id)
@@ -105,4 +113,20 @@ class SoalController extends Controller
 
         return redirect()->back()->with('success', 'Ratusan soal berhasil mendarat! 🚀');
     }
+
+  public function destroyAll($modul_id)
+{
+    // Menghapus seluruh soal yang terikat dengan id modul ini
+    Soal::where('modul_id', $modul_id)->delete();
+
+    return redirect()->back()->with('success', 'Semua soal di modul ini berhasil dibersihkan! 🗑️💥');
+}
+
+public function deleteAllGlobal()
+{
+    // Menghapus seluruh data dari tabel soal secara total
+    Soal::query()->delete();
+
+    return redirect()->back()->with('success', 'Semua soal di Bank Soal berhasil dihapus total! 🗑️💥');
+}
 }

@@ -150,12 +150,25 @@
 
         <div class="flex-1 bg-white rounded-[3rem] p-8 border border-white shadow-xl shadow-black/5 flex flex-col overflow-hidden">
             
-            <div class="flex justify-between items-center mb-8">
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
                 <h3 class="font-black text-xl text-edu-dark">Daftar Soal</h3>
-                <a href="{{ route('soal.create') }}" class="bg-edu-orange text-white px-6 py-3 rounded-2xl font-black text-xs hover:-translate-y-1 hover:shadow-lg hover:shadow-edu-orange/30 transition-all flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    TAMBAH SOAL
-                </a>
+                
+                <div class="flex items-center gap-3">
+                    @if(count($soal) > 0)
+                        <form action="{{ route('soal.deleteAllGlobal') }}" method="POST" onsubmit="return confirm('⚠️ PERINGATAN KERAS!\nApakah Anda yakin ingin menghapus SELURUH soal yang ada di Bank Soal? Data tidak bisa dikembalikan!');" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all text-xs font-black px-5 py-3.5 rounded-2xl border border-red-100 shadow-sm flex items-center gap-2">
+                                🗑️ HAPUS SEMUA SOAL
+                            </button>
+                        </form>
+                    @endif
+
+                    <a href="{{ route('soal.create') }}" class="bg-edu-orange text-white px-6 py-3.5 rounded-2xl font-black text-xs hover:-translate-y-1 hover:shadow-lg hover:shadow-edu-orange/30 transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        TAMBAH SOAL
+                    </a>
+                </div>
             </div>
 
             <div class="flex-1 overflow-auto rounded-2xl border-2 border-gray-50">
@@ -164,7 +177,8 @@
                         <tr class="bg-gray-50 border-b-2 border-gray-100">
                             <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center w-16">No</th>
                             <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest">Pertanyaan</th>
-                            <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest">Modul</th> <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Kategori</th>
+                            <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest">Modul</th> 
+                            <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Kategori</th>
                             <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Fase</th>
                             <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center">Kunci</th>
                             <th class="p-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-center w-32">Aksi</th>
@@ -187,7 +201,7 @@
                             </td>
                             <td class="p-4 text-center">
                                 <span class="px-3 py-1 rounded-lg text-xs font-bold bg-gray-100 text-gray-500">
-                                    Fase {{ $s->fase }}
+                                    Fase {{ strtoupper($s->fase) }}
                                 </span>
                             </td>
                             <td class="p-4 text-center">
