@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;900&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght=600;700;900&family=Poppins:wght=500;700;800&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -37,14 +37,12 @@
             background-position: center bottom;
             background-attachment: fixed;
             background-color: #E0F2FE;
-            overflow: hidden; /* Mengunci scrollbar layar utama */
+            overflow: hidden;
         }
         .font-kids { font-family: 'Fredoka', sans-serif; }
-
         .star-anim { display: inline-block; opacity: 0; transform: scale(0); }
         .result-card { opacity: 0; transform: scale(0.9); }
 
-        /* Glassmorphism Card Utama */
         .glass-panel {
             background: rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(14px);
@@ -52,14 +50,12 @@
             border: 2px solid rgba(255, 255, 255, 0.6);
         }
 
-        /* Peti Emas Tempat Skor */
         .treasure-box {
             background: linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.45) 100%);
             border: 4px solid #FFF;
             box-shadow: inset 0 0 20px rgba(255,255,255,0.6), 0 15px 30px rgba(15, 23, 42, 0.1);
         }
 
-        /* Animasi Gelembung Udara */
         .bubble {
             position: absolute;
             bottom: -50px;
@@ -80,15 +76,12 @@
 
     <div class="fixed inset-0 z-0 pointer-events-none" id="bubbles-container"></div>
 
-    {{-- KARTU HASIL UTAMA (Ukuran max-w-3xl agar ramping & pas di tengah monitor) --}}
     <div class="result-card max-w-3xl w-full glass-panel rounded-[3rem] p-6 md:p-8 shadow-2xl border-4 border-white relative z-10 overflow-visible">
-
         <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-amber-400 border-2 border-white px-8 py-2 rounded-xl shadow-lg -rotate-1 z-20 font-kids text-white font-black tracking-wide text-base whitespace-nowrap">
             ⚓ MISI PENYELAMAN SELESAI!
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center relative z-10">
-
             <div class="text-center md:text-left w-full flex flex-col justify-center">
                 <div id="main-emoji" class="text-[5.5rem] md:text-[6.5rem] mb-1 drop-shadow-2xl select-none">🏆</div>
 
@@ -104,18 +97,13 @@
                 <div class="mt-5 flex flex-col sm:flex-row gap-2.5 justify-center md:justify-start">
                     <a href="{{ route('siswa.dashboard') }}"
                        class="px-5 py-3 bg-edu-orange hover:bg-orange-600 active:translate-y-0.5 text-white text-center font-black text-xs rounded-xl shadow-[0_4px_0_0_#B55A0A] hover:shadow-[0_2px_0_0_#B55A0A] transition-all border-2 border-white font-kids tracking-wide whitespace-nowrap">
-                        🏠 BERANDA PENYELAM
-                    </a>
-                    <a href="{{ route('siswa.game.index') }}"
-                       class="px-5 py-3 bg-sky-500 hover:bg-sky-600 active:translate-y-0.5 text-white text-center font-black text-xs rounded-xl shadow-[0_4px_0_0_#0284C7] hover:shadow-[0_2px_0_0_#0284C7] transition-all border-2 border-white font-kids tracking-wide whitespace-nowrap">
-                        🎮 MULAI BERMAIN
+                       🏠 BERANDA PENYELAM
                     </a>
                 </div>
             </div>
 
             <div class="w-full max-w-xs md:max-w-none mx-auto">
                 <div class="treasure-box rounded-[2rem] p-5 md:p-6 text-center relative overflow-hidden">
-
                     <p class="text-blue-950 font-black uppercase tracking-widest text-xs font-kids mb-1 opacity-80">
                         💎 Skor Kecepatan Kamu 💎
                     </p>
@@ -127,10 +115,12 @@
 
                     <div class="mt-4 flex justify-center gap-2 bg-white/40 py-2.5 px-4 rounded-xl border border-white/50 shadow-inner">
                         @php
-                            if ($skor >= 81) { $bintang = 5; }
-                            elseif ($skor >= 61) { $bintang = 4; }
-                            elseif ($skor >= 41) { $bintang = 3; }
-                            elseif ($skor >= 21) { $bintang = 2; }
+                            // Hotfix: Menyelamatkan perhitungan bintang menggunakan variabel pelindung $skorAman
+                            $skorAman = $skor ?? 0;
+                            if ($skorAman >= 81) { $bintang = 5; }
+                            elseif ($skorAman >= 61) { $bintang = 4; }
+                            elseif ($skorAman >= 41) { $bintang = 3; }
+                            elseif ($skorAman >= 21) { $bintang = 2; }
                             else { $bintang = 1; }
                         @endphp
                         @for($i=0; $i < 5; $i++)
@@ -148,13 +138,12 @@
                     </p>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script>
         window.onload = () => {
-            const finalSkor = {{ $skor }};
+            const finalSkor = {{ $skor ?? 0 }};
 
             // 1. Animasi Kartu Zoom Masuk
             gsap.to(".result-card", {

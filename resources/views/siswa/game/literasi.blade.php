@@ -264,7 +264,7 @@
             document.getElementById('text-opt-A').innerText = soalSekarang.pilihan_a;
             document.getElementById('text-opt-B').innerText = soalSekarang.pilihan_b;
             document.getElementById('text-opt-C').innerText = soalSekarang.pilihan_c;
-            document.getElementById('text-opt-D').innerText = soalSekalarang.pilihan_d;
+            document.getElementById('text-opt-D').innerText = soalSekarang.pilihan_d;
         }
 
         function checkJawaban(pilihanSiswa) {

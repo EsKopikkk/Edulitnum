@@ -10,18 +10,17 @@ return new class extends Migration
     {
         Schema::create('soal', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('modul_id')->nullable();
             $table->text('pertanyaan');
-            $table->enum('kategori', ['literasi', 'numerasi']);
-            $table->enum('fase', ['A', 'B', 'C']);
-
-            // Kolom untuk Pilihan Ganda & Kunci
+            $table->string('kategori');
+            $table->string('tipe'); // <--- Hotfix: Kolom tipe wajib ada di sini
             $table->string('pilihan_a');
             $table->string('pilihan_b');
             $table->string('pilihan_c');
             $table->string('pilihan_d');
             $table->string('kunci_jawaban');
-
-            $table->boolean('status_validasi')->default(false);
+            $table->integer('status_validasi')->default(1);
+            $table->string('fase');
             $table->timestamps();
         });
     }
