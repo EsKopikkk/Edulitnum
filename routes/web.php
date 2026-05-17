@@ -83,7 +83,7 @@ Route::middleware(['auth', 'role:siswa', 'force.pretest'])->prefix('siswa')->nam
     Route::get('/game', [GameController::class, 'index'])->name('game.index');
     Route::get('/game/play/{tipe}', [GameController::class, 'play'])->name('game.play');
     Route::get('/modul/{kategori}', [ModulController::class, 'siswaShow'])->name('modul.show');
-    Route::post('/game/save-score', [UjianController::class, 'saveScore'])->name('game.save-score');
+    Route::post('/game/simpan-skor', [GameController::class, 'simpanSkor'])->name('game.simpanSkor');
 });
 // ==========================================
 // 6. AUTH ROUTES
