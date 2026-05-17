@@ -9,7 +9,7 @@ class Modul extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['kelas_id', 'judul', 'deskripsi', 'file_materi'];
+    protected $fillable = ['kelas_id', 'judul', 'deskripsi', 'file_materi', 'gambar', 'gambar_konten'];
 
     // 1 Modul dimiliki oleh 1 Kelas
     public function kelas()
