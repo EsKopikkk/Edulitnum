@@ -12,14 +12,18 @@ class KelasController extends Controller
 public function index()
 {
     $kelas = Kelas::with('guru')->withCount('siswa')->get();
-    return view('admin.kelola_kelas', compact('kelas'));
+    $resetRequests = User::where('reset_password_requested', true)->get();
+    $notificationCount = $resetRequests->count();
+    return view('admin.kelola_kelas', compact('kelas', 'notificationCount', 'resetRequests'));
 }
 
 
     public function create()
     {
         $guru = User::where('role', 'guru')->get();
-        return view('admin.tambah_kelas', compact('guru'));
+        $resetRequests = User::where('reset_password_requested', true)->get();
+        $notificationCount = $resetRequests->count();
+        return view('admin.tambah_kelas', compact('guru', 'notificationCount', 'resetRequests'));
     }
 
     public function store(Request $request)
@@ -38,7 +42,9 @@ public function index()
     public function edit(Kelas $kelas)
     {
         $guru = User::where('role', 'guru')->get();
-        return view('admin.edit_kelas', compact('kelas', 'guru'));
+        $resetRequests = User::where('reset_password_requested', true)->get();
+        $notificationCount = $resetRequests->count();
+        return view('admin.edit_kelas', compact('kelas', 'guru', 'notificationCount', 'resetRequests'));
     }
 
     public function update(Request $request, Kelas $kelas)
@@ -57,9 +63,11 @@ public function index()
     public function show(Kelas $kelas)
 {
     // Memuat data siswa yang ada di kelas tersebut melalui relasi siswa_detail [cite: 17-20, 82-85]
-    $kelas->load(['guru', 'siswa.user']); 
-    
-    return view('admin.detail_kelas', compact('kelas'));
+    $kelas->load(['guru', 'siswa.user']);
+
+    $resetRequests = User::where('reset_password_requested', true)->get();
+    $notificationCount = $resetRequests->count();
+    return view('admin.detail_kelas', compact('kelas', 'notificationCount', 'resetRequests'));
 }
     public function destroy(Kelas $kelas)
     {
@@ -72,7 +80,9 @@ public function kelolaSiswa(Kelas $kelas)
 {
     $siswaDiKelas = $kelas->siswa()->with('user')->get();
     $semuaSiswa = User::where('role', 'siswa')->get();
-    return view('admin.kelola_siswa', compact('kelas', 'siswaDiKelas', 'semuaSiswa'));
+    $resetRequests = User::where('reset_password_requested', true)->get();
+    $notificationCount = $resetRequests->count();
+    return view('admin.kelola_siswa', compact('kelas', 'siswaDiKelas', 'semuaSiswa', 'notificationCount', 'resetRequests'));
 }
 
 // Tambah siswa ke kelas

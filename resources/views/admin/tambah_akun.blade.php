@@ -29,13 +29,11 @@
             @error('email') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
         </div>
 
-        <!-- Input Password -->
-        <div class="mb-6">
-            <label for="password" class="block text-sm font-black text-edu-dark tracking-widest uppercase mb-2">Password</label>
-            <input type="password" id="password" name="password" required
-                class="w-full px-5 py-4 rounded-2xl bg-white border-2 border-transparent focus:border-edu-blue focus:ring-0 text-edu-dark font-medium transition-all shadow-sm outline-none" 
-                placeholder="Minimal 8 karakter">
-            @error('password') <p class="text-red-500 text-xs mt-2 font-bold">{{ $message }}</p> @enderror
+        <!-- Info Password Default -->
+        <div class="mb-8 p-4 bg-edu-blue/10 border-l-4 border-edu-blue rounded-xl">
+            <p class="text-sm font-semibold text-edu-dark">
+                <span class="text-edu-blue font-black">ℹ️ Informasi:</span> Password default yang digunakan adalah <span class="font-black text-edu-orange">password123</span>
+            </p>
         </div>
 
         <!-- Pilihan Role -->

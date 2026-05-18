@@ -24,6 +24,7 @@ class UserSeeder extends Seeder
             ['email' => 'riyadhy@edulitnum.test', 'name' => 'Riyadhy', 'role' => 'siswa', 'nis' => 'EDA101'],
             ['email' => 'yunita@edulitnum.test', 'name' => 'Yunita', 'role' => 'siswa', 'nis' => 'EDA102'],
             ['email' => 'astri@edulitnum.test', 'name' => 'Astri', 'role' => 'siswa', 'nis' => 'EDB102'],
+            ['email' => 'yuki@edulitnum', 'name' => 'yuki', 'role' => 'siswa', 'nis' => 'EDC101'],
         ];
 
         foreach ($users as $userData) {

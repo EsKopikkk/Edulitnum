@@ -22,7 +22,11 @@ class DashboardController extends Controller
         // Mengambil 5 data siswa terbaru
         $penggunaTerbaru = User::where('role', 'siswa')->latest()->take(5)->get();
 
-        return view('admin.dashboard', compact('totalSiswa', 'totalGuru', 'penggunaTerbaru'));
+        // Ambil notifikasi untuk ditampilkan di header
+        $resetRequests = User::where('reset_password_requested', true)->get();
+        $notificationCount = $resetRequests->count();
+
+        return view('admin.dashboard', compact('totalSiswa', 'totalGuru', 'penggunaTerbaru', 'notificationCount', 'resetRequests'));
     }
 
     // Halaman Dashboard Guru

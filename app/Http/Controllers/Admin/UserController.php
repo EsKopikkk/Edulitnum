@@ -16,7 +16,11 @@ class UserController extends Controller
         // Ambil semua data user kecuali yang role-nya admin (agar admin tidak menghapus dirinya sendiri)
         $users = User::where('role', '!=', 'admin')->get();
 
-        return view('admin.kelola_akun', compact('users'));
+        // Ambil notifikasi untuk ditampilkan di header
+        $resetRequests = User::where('reset_password_requested', true)->get();
+        $notificationCount = $resetRequests->count();
+
+        return view('admin.kelola_akun', compact('users', 'notificationCount', 'resetRequests'));
     }
 
     // Fungsi untuk menampilkan notifikasi password reset
@@ -32,7 +36,6 @@ class UserController extends Controller
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8'],
             'role' => ['required', 'in:siswa,guru'],
         ];
 
@@ -46,7 +49,7 @@ class UserController extends Controller
         $userData = [
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => bcrypt('password123'),
             'role' => $request->role,
         ];
 
@@ -57,13 +60,17 @@ class UserController extends Controller
 
         User::create($userData);
 
-        return back()->with('success', 'Akun berhasil ditambahkan!');
+        return redirect()->route('admin.akun.index')->with('success', 'Akun berhasil ditambahkan!');
     }
 
     public function create()
     {
+        // Ambil notifikasi untuk ditampilkan di header
+        $resetRequests = User::where('reset_password_requested', true)->get();
+        $notificationCount = $resetRequests->count();
+
         // Panggil file form tambah data (tidak perlu pakai .blade.php)
-        return view('admin.tambah_akun');
+        return view('admin.tambah_akun', compact('notificationCount', 'resetRequests'));
     }
     // 1. Fungsi untuk MENAMPILKAN halaman form edit
     public function edit($id)
@@ -71,8 +78,12 @@ class UserController extends Controller
         // Cari user berdasarkan ID yang diklik
         $user = User::findOrFail($id);
 
+        // Ambil notifikasi untuk ditampilkan di header
+        $resetRequests = User::where('reset_password_requested', true)->get();
+        $notificationCount = $resetRequests->count();
+
         // Lempar data user tersebut ke halaman view 'edit_akun'
-        return view('admin.edit_akun', compact('user'));
+        return view('admin.edit_akun', compact('user', 'notificationCount', 'resetRequests'));
     }
 
     // 2. Fungsi untuk MENYIMPAN data yang sudah diedit ke database
